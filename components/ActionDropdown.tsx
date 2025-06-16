@@ -42,7 +42,7 @@ const ActionDropdown = ({ file }: { file: Models.Document }) => {
   const [renameError, setRenameError] = useState("");
   const path = usePathname();
 
-  //console.log(file);
+  console.log("File: ", file);
 
   const closeAllModals = () => {
     setIsDropDownOpen(false);
@@ -98,7 +98,12 @@ const ActionDropdown = ({ file }: { file: Models.Document }) => {
         renameFile({ fileId: file.$id, extension: file.extension, path, name }),
       share: () => updateFileUsers({ fileId: file.$id, path, emails: emails }),
       delete: () =>
-        deleteFile({ fileId: file.$id, path, bucketFileId: file.bucketFileId }),
+        deleteFile({
+          fileId: file.$id,
+          path,
+          bucketFileId: file.bucketFileId,
+          owner: file.owner.email,
+        }),
     };
 
     success = await actions[action.value as keyof typeof actions]();

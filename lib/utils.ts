@@ -1,6 +1,8 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
+export const MAX_SIZE = 20 * 1024 * 1024 * 1024;
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
@@ -143,8 +145,8 @@ export const getUsageSummary = (totalSpace: any) => {
     },
     {
       title: "Others",
-      size: totalSpace.other.size,
-      latestDate: totalSpace.other.latestDate,
+      size: totalSpace.others.size,
+      latestDate: totalSpace.others.latestDate,
       icon: "/assets/icons/file-other-light.svg",
       url: "/others",
     },

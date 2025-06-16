@@ -35,11 +35,11 @@ const MobileNavigation = ({
 
   return (
     <header className="mobile-header bg-white border-b border-gray-200 shadow-sm">
-      <div className="flex items-center justify-between px-4 py-3">
+      <div className="flex justify-between px-4 py-3">
         {/* Logo */}
         <Link href="/" className="flex items-center">
           <Image
-            src="/assets/icons/logo-full-brand.svg"
+            src="/assets/images/logo.png"
             alt="Arqive"
             width={100}
             height={32}
@@ -50,7 +50,7 @@ const MobileNavigation = ({
         {/* Menu Trigger */}
         <Sheet open={open} onOpenChange={setOpen}>
           <SheetTrigger asChild>
-            <button className="p-2 rounded-lg hover:bg-gray-100 transition-colors">
+            <button className="p-2  rounded-lg hover:bg-gray-100 transition-colors">
               <Image
                 src="/assets/icons/menu.svg"
                 alt="Menu"

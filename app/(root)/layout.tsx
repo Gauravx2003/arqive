@@ -14,7 +14,7 @@ const layout = async ({ children }: { children: React.ReactNode }) => {
   }
 
   return (
-    <main className="flex h-screen bg-gray-100 overflow-hidden">
+    <main className="flex h-screen bg-gray-100">
       {/* Sidebar - Desktop Only */}
       <div className="hidden lg:flex lg:flex-shrink-0">
         <Sidebar {...currentUser} />

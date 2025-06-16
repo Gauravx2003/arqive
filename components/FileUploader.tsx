@@ -38,20 +38,21 @@ const FileUploader = ({
 
       const uploadPromises = acceptedFiles.map(async (file) => {
         if (file.size > MAX_FILE_SIZE) {
-          setFiles((prevFiles) => prevFiles.filter((f) => f.name != file.name));
+          setFiles((prev) => prev.filter((f) => f.name !== file.name));
           return toast.error("File must be up to 50MB");
         }
 
-        return uploadFiles({ file, ownerId, accountId, path }).then(
-          (uploadFiles) => {
-            if (uploadFiles) {
-              setFiles((prevFiles) =>
-                prevFiles.filter((f) => f.name != file.name)
-              );
-              toast.success(`${file.name} uploaded successfully!`);
-            }
+        try {
+          const result = await uploadFiles({ file, ownerId, accountId, path });
+          if (result) {
+            setFiles((prev) => prev.filter((f) => f.name !== file.name));
+            toast.success(`${file.name} uploaded successfully!`);
           }
-        );
+        } catch (error: any) {
+          //console.error("Upload failed:", error.message || error);
+          toast.error(error.message || "Upload failed.");
+          setFiles((prev) => prev.filter((f) => f.name !== file.name));
+        }
       });
 
       await Promise.all(uploadPromises);
@@ -111,8 +112,8 @@ const FileUploader = ({
 
       {/* Upload Preview */}
       {files.length > 0 && (
-        <div className="absolute top-full left-0 right-0 z-50 mt-2">
-          <div className="bg-white rounded-xl shadow-xl border border-gray-200 p-4 max-h-80 overflow-y-auto">
+        <div className="absolute right-[-102] top-15 z-50">
+          <div className="bg-white rounded-xl shadow-xl border border-gray-200 p-3 max-h-80 min-w-80 overflow-y-auto">
             <div className="flex items-center space-x-2 mb-3 pb-2 border-b border-gray-100">
               <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
               <h4 className="text-sm font-semibold text-gray-900">
