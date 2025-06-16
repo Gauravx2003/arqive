@@ -14,7 +14,7 @@ const Header = ({
   accountId: string;
 }) => {
   return (
-    <header className="bg-white border-b border-gray-200 shadow-sm">
+    <header className="backdrop-blur-md bg-white/30 shadow-sm border-b rounded-xl border-white/20 mx-1 mt-1">
       <div className="flex items-center justify-between px-6 py-4">
         {/* Search Section */}
         <div className="flex-1 max-w-2xl">
@@ -29,12 +29,17 @@ const Header = ({
           </div>
 
           {/* Logout Button */}
-          <form action={LogOut}>
+          <form
+            action={async () => {
+              "use server";
+              await LogOut();
+            }}
+          >
             <Button
               type="submit"
               variant="outline"
               size="sm"
-              className="flex items-center space-x-2 px-4 py-2 border-gray-300 hover:bg-red-50 hover:border-red-300 hover:text-red-600 transition-all duration-200"
+              className="flex items-center space-x-2 px-4 py-4.5 border-gray-300 hover:bg-red-50 hover:border-red-300 hover:text-red-600 transition-all duration-200"
             >
               <Image
                 src="/assets/icons/logout.svg"

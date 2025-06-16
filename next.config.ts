@@ -19,7 +19,23 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
+        hostname: "via.placeholder.com",
+      },
+      {
+        protocol: "https",
+        hostname: "png.pngtree.com",
+      },
+      {
+        protocol: "https",
+        hostname: "www.freeiconspng.com",
+      },
+      {
+        protocol: "https",
         hostname: "imgs.search.brave.com",
+      },
+      {
+        protocol: "https",
+        hostname: "www.clipartmax.com",
       },
       {
         protocol: "https",

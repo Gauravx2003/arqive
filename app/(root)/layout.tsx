@@ -6,6 +6,8 @@ import { getCurrentUser } from "@/lib/actions/user.action";
 import { Toaster } from "@/components/ui/sonner";
 import { redirect } from "next/navigation";
 
+export const dynamic = "force-dynamic";
+
 const layout = async ({ children }: { children: React.ReactNode }) => {
   const currentUser = await getCurrentUser();
 
@@ -14,7 +16,8 @@ const layout = async ({ children }: { children: React.ReactNode }) => {
   }
 
   return (
-    <main className="flex h-screen bg-gray-100">
+    <main className="realtive flex h-screen bg-gray-100">
+      <Toaster />
       {/* Sidebar - Desktop Only */}
       <div className="hidden lg:flex lg:flex-shrink-0">
         <Sidebar {...currentUser} />
@@ -37,12 +40,10 @@ const layout = async ({ children }: { children: React.ReactNode }) => {
         </div>
 
         {/* Page Content */}
-        <div className="flex-1 overflow-auto bg-white m-2 lg:m-4 rounded-xl shadow-sm border border-gray-200">
-          <div className="h-full p-4 sm:p-6 lg:p-8">{children}</div>
+        <div className="flex-1 overflow-auto bg-white lg:m-2 rounded-xl shadow-sm border border-gray-200">
+          <div className="h-full  sm:p-6 lg:p-8">{children}</div>
         </div>
       </section>
-
-      <Toaster />
     </main>
   );
 };

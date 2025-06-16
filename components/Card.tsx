@@ -11,16 +11,16 @@ const Card = ({ file }: { file: Models.Document }) => {
     <Link
       href={file.url}
       target="_blank"
-      className="file-card group relative overflow-hidden"
+      className="file-card group z-0 relative overflow-hidden"
     >
       {/* Clean white background */}
-      <div className="absolute inset-0 bg-white rounded-xl border border-gray-200/60 transition-all duration-300 group-hover:border-blue-300/40 group-hover:shadow-xl group-hover:shadow-blue-500/10" />
+      <div className="absolute inset-0  bg-white rounded-xl border border-gray-200/60 transition-all duration-300 group-hover:border-blue-300/40 group-hover:shadow-xl group-hover:shadow-blue-500/10" />
 
       {/* Subtle hover gradient overlay */}
       <div className="absolute inset-0 bg-gradient-to-br from-blue-50/0 via-purple-50/0 to-cyan-50/0 rounded-xl opacity-0 group-hover:opacity-100 group-hover:from-blue-50/30 group-hover:via-purple-50/20 group-hover:to-cyan-50/30 transition-all duration-500" />
 
       {/* Main content wrapper */}
-      <div className="relative z-10 p-3 h-full transform transition-all duration-300 group-hover:scale-[1.02] group-hover:-translate-y-1">
+      <div className="relative p-3 h-full transform transition-all duration-300 group-hover:scale-[1.02] group-hover:-translate-y-1">
         {/* Header section */}
         <div className="flex justify-between items-start mb-4">
           {/* Thumbnail with subtle hover effect */}

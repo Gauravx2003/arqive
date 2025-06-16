@@ -112,7 +112,7 @@ const FileUploader = ({
 
       {/* Upload Preview */}
       {files.length > 0 && (
-        <div className="absolute right-[-102] top-15 z-50">
+        <div className="absolute right-[-102] top-15">
           <div className="bg-white rounded-xl shadow-xl border border-gray-200 p-3 max-h-80 min-w-80 overflow-y-auto">
             <div className="flex items-center space-x-2 mb-3 pb-2 border-b border-gray-100">
               <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>

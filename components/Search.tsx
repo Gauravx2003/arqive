@@ -13,12 +13,12 @@ import { useDebounce } from "use-debounce";
 import { cn } from "@/lib/utils";
 
 const Search = () => {
-  const [query, setQuery] = useState("");
   const searchParams = useSearchParams();
   const searchQuery = searchParams.get("query") || "";
   const [results, setResults] = useState<Models.Document[]>([]);
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [query, setQuery] = useState(searchQuery);
   const [debounceQuery] = useDebounce(query, 400);
   const router = useRouter();
   const path = usePathname();
@@ -49,22 +49,32 @@ const Search = () => {
   }, [debounceQuery]);
 
   useEffect(() => {
-    if (!searchQuery) {
-      setQuery("");
-      setOpen(false);
-    }
+    setQuery(searchQuery);
   }, [searchQuery]);
 
   const handleClick = (file: Models.Document) => {
+    console.log("Enterd HandleClick: ", file);
     setOpen(false);
     setResults([]);
     setQuery("");
 
-    router.push(
-      `${
+    console.log("Type is: ", file.type);
+    console.log("Query is: ", encodeURIComponent(file.name));
+
+    console.log(
+      "Navigating to:",
+      `/${
         file.type === "video" || file.type === "audio"
           ? "media"
-          : file.type + "s"
+          : file.type + (file.type === "others" ? "" : "s")
+      }?query=${encodeURIComponent(file.name)}`
+    );
+
+    router.push(
+      `/${
+        file.type === "video" || file.type === "audio"
+          ? "media"
+          : file.type + (file.type === "others" ? "" : "s")
       }?query=${encodeURIComponent(file.name)}`
     );
   };
@@ -130,7 +140,7 @@ const Search = () => {
 
       {/* Search Results Dropdown */}
       {open && (
-        <div className="absolute top-full left-0 right-0 z-50 bg-white border border-gray-200 border-t-0 rounded-b-lg shadow-xl max-h-80 overflow-y-auto">
+        <div className="absolute top-full left-0 right-0 z-[9999] bg-black border border-gray-200 border-t-0 rounded-b-lg shadow-xl max-h-80 overflow-y-auto">
           {results.length > 0 ? (
             <div className="py-2">
               <div className="px-4 py-2 border-b border-gray-100">
@@ -148,7 +158,10 @@ const Search = () => {
                     "hover:bg-gray-50 hover:border-l-4 hover:border-blue-500",
                     index !== results.length - 1 && "border-b border-gray-50"
                   )}
-                  onClick={() => handleClick(file)}
+                  onClick={() => {
+                    console.log("File Clicked ", file);
+                    handleClick(file);
+                  }}
                 >
                   <div className="flex items-center space-x-3 flex-1 min-w-0">
                     <div className="flex-shrink-0">

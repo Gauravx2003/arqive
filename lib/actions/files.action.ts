@@ -111,11 +111,8 @@ export const getFiles = async ({
     const currentUser = await getCurrentUser();
     if (!currentUser) throw new Error("User Not Found");
 
-<<<<<<< HEAD
     // console.log("Current User: ", currentUser);
 
-=======
->>>>>>> a9a62f7a4a0d4ea6682183c8160c56580cf535d3
     const queries = createQueries(currentUser, types, searchText, sort, limit);
 
     const files = await database.listDocuments(
@@ -155,11 +152,7 @@ export const getTotalSpaceUsed = async () => {
       image: { size: 0, latestDate: "" },
       video: { size: 0, latestDate: "" },
       audio: { size: 0, latestDate: "" },
-<<<<<<< HEAD
       others: { size: 0, latestDate: "" },
-=======
-      other: { size: 0, latestDate: "" },
->>>>>>> a9a62f7a4a0d4ea6682183c8160c56580cf535d3
     };
 
     files.documents.forEach((file: Models.Document) => {
@@ -225,7 +218,6 @@ export const deleteFile = async ({
   try {
     const { storage, database } = await CreateAdminClient();
 
-<<<<<<< HEAD
     const currentUser = await getCurrentUser();
 
     if (currentUser.email != owner) {
@@ -254,8 +246,6 @@ export const deleteFile = async ({
       return Stringify({ status: "success" });
     }
 
-=======
->>>>>>> a9a62f7a4a0d4ea6682183c8160c56580cf535d3
     const deletedFile = await database.deleteDocument(
       appwriteConfig.databaseId,
       appwriteConfig.filesCollection,

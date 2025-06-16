@@ -3,11 +3,19 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { avatarPlaceholderUrl, navItems } from "@/constants";
+import { navItems } from "@/constants";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 
-const Sidebar = ({ fullname, email }: { fullname: string; email: string }) => {
+const Sidebar = ({
+  fullname,
+  email,
+  avatar,
+}: {
+  fullname: string;
+  avatar: string;
+  email: string;
+}) => {
   const pathname = usePathname();
 
   return (
@@ -89,7 +97,7 @@ const Sidebar = ({ fullname, email }: { fullname: string; email: string }) => {
         <div className="flex items-center space-x-3">
           <div className="relative">
             <Image
-              src={avatarPlaceholderUrl}
+              src={avatar}
               alt="User Avatar"
               width={40}
               height={40}

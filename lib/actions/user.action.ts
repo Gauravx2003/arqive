@@ -39,9 +39,11 @@ export const sendEmailOTP = async ({ email }: { email: string }) => {
 export const CreateAccount = async ({
   email,
   fullname,
+  avatar,
 }: {
   email: string;
   fullname: string;
+  avatar: string;
 }) => {
   const existingUser = await getByEmail(email);
 
@@ -60,8 +62,7 @@ export const CreateAccount = async ({
       {
         email,
         fullname,
-        avatar:
-          "https://imgs.search.brave.com/08vXeKVhSauIzbv7ImRsT_Xgs6tMBTXjNWUfOfOay1E/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly90aHVt/YnMuZHJlYW1zdGlt/ZS5jb20vYi9wcm9m/aWxlLXBsYWNlaG9s/ZGVyLWltYWdlLWdy/YXktc2lsaG91ZXR0/ZS1uby1waG90by1w/ZXJzb24tYXZhdGFy/LWRlZmF1bHQtcGlj/LXVzZWQtd2ViLWRl/c2lnbi0xMjczOTM0/ODMuanBn",
+        avatar,
         accountId,
       }
     );
@@ -156,11 +157,12 @@ export const LogOut = async () => {
     cookieStore.delete("appwrite-session");
 
     console.log("✅ User logged out successfully");
-    redirect("/sign-in");
   } catch (error) {
     console.error("❌ Error logging out user:", error);
     //redirect("/sign-in");
   }
+
+  redirect("/sign-in");
 };
 
 export const SignIn = async ({ email }: { email: string }) => {

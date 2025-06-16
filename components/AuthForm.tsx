@@ -23,6 +23,18 @@ import OTPModal from "./OTPModal";
 
 type FormType = "sign-in" | "sign-up";
 
+// Placeholder avatar options
+const avatarOptions = [
+  "https://img.freepik.com/free-psd/3d-illustration-person-with-pink-hair_23-2149436186.jpg?ga=GA1.1.1990715703.1750079039&w=740",
+  "https://img.freepik.com/free-psd/3d-illustration-person-with-sunglasses_23-2149436180.jpg?ga=GA1.1.1990715703.1750079039&w=740",
+  "https://img.freepik.com/free-psd/3d-illustration-person-with-punk-hair-jacket_23-2149436198.jpg?ga=GA1.1.1990715703.1750079039&w=740",
+  "https://img.freepik.com/free-psd/3d-illustration-person-with-long-hair_23-2149436197.jpg?ga=GA1.1.1990715703.1750079039&w=740",
+  "https://img.freepik.com/free-psd/3d-illustration-person_23-2149436182.jpg?ga=GA1.1.1990715703.1750079039&w=740",
+  "https://img.freepik.com/free-psd/3d-rendering-hair-style-avatar-design_23-2151869119.jpg?ga=GA1.1.1990715703.1750079039&w=740",
+  "https://img.freepik.com/free-psd/3d-illustration-with-online-avatar_23-2151303045.jpg?ga=GA1.1.1990715703.1750079039&w=740",
+  "https://img.freepik.com/free-psd/3d-illustration-human-avatar-profile_23-2150671142.jpg?ga=GA1.1.1990715703.1750079039&w=740",
+];
+
 const authformSchema = (formType: FormType) => {
   return z.object({
     fullname:
@@ -34,6 +46,12 @@ const authformSchema = (formType: FormType) => {
     email: z.string().email({
       message: "Invalid email address.",
     }),
+    avatar:
+      formType === "sign-up"
+        ? z.string().min(1, {
+            message: "Please select an avatar.",
+          })
+        : z.string().optional(),
   });
 };
 
@@ -49,6 +67,7 @@ const AuthForm = ({ type }: { type: FormType }) => {
     defaultValues: {
       fullname: "",
       email: "",
+      avatar: "",
     },
   });
 
@@ -63,6 +82,8 @@ const AuthForm = ({ type }: { type: FormType }) => {
           ? await CreateAccount({
               email: values.email,
               fullname: values.fullname || "",
+              // Note: You'll need to add avatar to your CreateAccount function when ready
+              avatar: values.avatar || "",
             })
           : await SignIn({ email: values.email });
 
@@ -162,6 +183,62 @@ const AuthForm = ({ type }: { type: FormType }) => {
                 </FormItem>
               )}
             />
+
+            {/* Avatar Selection - Only for sign-up */}
+            {type === "sign-up" && (
+              <FormField
+                control={form.control}
+                name="avatar"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-sm font-medium text-slate-700">
+                      Choose Your Avatar
+                    </FormLabel>
+                    <FormControl>
+                      <div className="grid grid-cols-4 gap-3 p-4 bg-slate-50/50 rounded-xl border border-slate-200">
+                        {avatarOptions.map((avatarUrl, index) => (
+                          <div
+                            key={index}
+                            className={`relative cursor-pointer transition-all duration-200 transform hover:scale-105 ${
+                              field.value === avatarUrl
+                                ? "ring-2 ring-indigo-500 ring-offset-2 shadow-lg"
+                                : "hover:shadow-md"
+                            }`}
+                            onClick={() => field.onChange(avatarUrl)}
+                          >
+                            <div className="aspect-square rounded-full overflow-hidden bg-white border-2 border-slate-200">
+                              <Image
+                                src={avatarUrl}
+                                alt={`Avatar option ${index + 1}`}
+                                width={60}
+                                height={60}
+                                className="w-full h-full object-cover"
+                              />
+                            </div>
+                            {field.value === avatarUrl && (
+                              <div className="absolute -top-1 -right-1 w-5 h-5 bg-indigo-500 rounded-full flex items-center justify-center">
+                                <svg
+                                  className="w-3 h-3 text-white"
+                                  fill="currentColor"
+                                  viewBox="0 0 20 20"
+                                >
+                                  <path
+                                    fillRule="evenodd"
+                                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                    clipRule="evenodd"
+                                  />
+                                </svg>
+                              </div>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </FormControl>
+                    <FormMessage className="text-red-500 text-sm" />
+                  </FormItem>
+                )}
+              />
+            )}
 
             {/* Submit Button */}
             <Button

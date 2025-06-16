@@ -26,14 +26,7 @@ const Chart = ({ used, total }: ChartProps) => {
   return (
     <div className="relative w-48 h-48 mx-auto">
       {/* Background Circle */}
-<<<<<<< HEAD
       <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
-=======
-      <svg
-        className="w-full h-full transform -rotate-90"
-        viewBox="0 0 100 100"
-      >
->>>>>>> a9a62f7a4a0d4ea6682183c8160c56580cf535d3
         {/* Background circle */}
         <circle
           cx="50"
@@ -44,11 +37,7 @@ const Chart = ({ used, total }: ChartProps) => {
           fill="none"
           className="opacity-20"
         />
-<<<<<<< HEAD
 
-=======
-        
->>>>>>> a9a62f7a4a0d4ea6682183c8160c56580cf535d3
         {/* Progress circle */}
         <circle
           cx="50"
@@ -73,13 +62,7 @@ const Chart = ({ used, total }: ChartProps) => {
           <div className="text-3xl font-bold text-gray-900 mb-1">
             {percentage}%
           </div>
-<<<<<<< HEAD
           <div className="text-sm text-gray-600 font-medium">Used</div>
-=======
-          <div className="text-sm text-gray-600 font-medium">
-            Used
-          </div>
->>>>>>> a9a62f7a4a0d4ea6682183c8160c56580cf535d3
           <div className="text-xs text-gray-500 mt-1">
             {convertFileSize(used)}
           </div>
@@ -87,11 +70,7 @@ const Chart = ({ used, total }: ChartProps) => {
       </div>
 
       {/* Animated pulse effect */}
-<<<<<<< HEAD
       <div
-=======
-      <div 
->>>>>>> a9a62f7a4a0d4ea6682183c8160c56580cf535d3
         className="absolute inset-0 rounded-full opacity-20 animate-pulse"
         style={{
           background: `radial-gradient(circle, ${color}20 0%, transparent 70%)`,
@@ -101,8 +80,4 @@ const Chart = ({ used, total }: ChartProps) => {
   );
 };
 
-<<<<<<< HEAD
 export default Chart;
-=======
-export default Chart;
->>>>>>> a9a62f7a4a0d4ea6682183c8160c56580cf535d3
