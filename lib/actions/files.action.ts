@@ -61,7 +61,8 @@ const createQueries = (
   currentUser: Models.Document,
   types: string[],
   searchText: string,
-  sort: string
+  sort: string,
+  limit?: number
 ) => {
   const queries = [
     Query.or([
@@ -72,6 +73,7 @@ const createQueries = (
 
   if (types.length > 0) queries.push(Query.equal("type", types));
   if (searchText) queries.push(Query.contains("name", searchText));
+  if (limit) queries.push(Query.limit(limit));
 
   if (sort) {
     const [sortBy, orderBy] = sort.split("-");
@@ -90,26 +92,73 @@ export const getFiles = async ({
   types = [],
   searchText = "",
   sort = "",
+  limit,
 }: GetFilesProps) => {
   const { database } = await CreateAdminClient();
   try {
     const currentUser = await getCurrentUser();
     if (!currentUser) throw new Error("User Not Found");
 
-    const queries = createQueries(currentUser, types, searchText, sort);
+    const queries = createQueries(currentUser, types, searchText, sort, limit);
 
     const files = await database.listDocuments(
       appwriteConfig.databaseId,
       appwriteConfig.filesCollection,
-      //   appwriteConfig.projectId,
       queries
     );
-
-    //console.log("From Queries we got: ", files);
 
     return Stringify(files);
   } catch (error) {
     handleError(error, "Failed to get files");
+  }
+};
+
+export const getTotalSpaceUsed = async () => {
+  try {
+    const { database } = await CreateAdminClient();
+    const currentUser = await getCurrentUser();
+    if (!currentUser) throw new Error("User Not Found");
+
+    const queries = [
+      Query.or([
+        Query.equal("owner", [currentUser.$id]),
+        Query.contains("users", [currentUser.email]),
+      ]),
+      Query.select(["type", "size", "$updatedAt"]),
+    ];
+
+    const files = await database.listDocuments(
+      appwriteConfig.databaseId,
+      appwriteConfig.filesCollection,
+      queries
+    );
+
+    const totalSpace = {
+      document: { size: 0, latestDate: "" },
+      image: { size: 0, latestDate: "" },
+      video: { size: 0, latestDate: "" },
+      audio: { size: 0, latestDate: "" },
+      other: { size: 0, latestDate: "" },
+    };
+
+    files.documents.forEach((file: Models.Document) => {
+      const fileType = file.type as keyof typeof totalSpace;
+      if (totalSpace[fileType]) {
+        totalSpace[fileType].size += file.size;
+
+        // Update latest date if this file is more recent
+        if (
+          !totalSpace[fileType].latestDate ||
+          new Date(file.$updatedAt) > new Date(totalSpace[fileType].latestDate)
+        ) {
+          totalSpace[fileType].latestDate = file.$updatedAt;
+        }
+      }
+    });
+
+    return Stringify(totalSpace);
+  } catch (error) {
+    handleError(error, "Failed to get total space used");
   }
 };
 
@@ -152,10 +201,6 @@ export const deleteFile = async ({
 }) => {
   try {
     const { storage, database } = await CreateAdminClient();
-
-    // await storage.deleteFile(
-    //   appwriteConfig.bucketid
-    // )
 
     const deletedFile = await database.deleteDocument(
       appwriteConfig.databaseId,
