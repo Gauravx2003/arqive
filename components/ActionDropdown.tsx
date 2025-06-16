@@ -153,7 +153,7 @@ const ActionDropdown = ({ file }: { file: Models.Document }) => {
     const { value, label } = action;
 
     return (
-      <DialogContent className="shad-dialog button max-w-md">
+      <DialogContent className="shad-dialog button max-w-md z-[10000]">
         <DialogHeader className="flex flex-col gap-4">
           <DialogTitle className="text-center text-xl font-semibold">
             {label}
@@ -284,7 +284,7 @@ const ActionDropdown = ({ file }: { file: Models.Document }) => {
   return (
     <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
       <DropdownMenu open={isDropDownOpen} onOpenChange={setIsDropDownOpen}>
-        <DropdownMenuTrigger className="shad-no-focus">
+        <DropdownMenuTrigger className="shad-no-focus relative z-30">
           <Image
             src="/assets/icons/dots.svg"
             alt="option"
@@ -292,7 +292,7 @@ const ActionDropdown = ({ file }: { file: Models.Document }) => {
             height={25}
           />
         </DropdownMenuTrigger>
-        <DropdownMenuContent>
+        <DropdownMenuContent className="z-[9999]">
           <DropdownMenuLabel className="max-w-[200px] truncate">
             {file.name}
           </DropdownMenuLabel>

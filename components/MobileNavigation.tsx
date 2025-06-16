@@ -34,7 +34,7 @@ const MobileNavigation = ({
   const pathname = usePathname();
 
   return (
-    <header className="mobile-header bg-white border-b border-gray-200 shadow-sm">
+    <header className="mobile-header bg-white border-b border-gray-200 shadow-sm relative z-30">
       <div className="flex justify-between px-4 py-3">
         {/* Logo */}
         <Link href="/" className="flex items-center">
@@ -50,7 +50,7 @@ const MobileNavigation = ({
         {/* Menu Trigger */}
         <Sheet open={open} onOpenChange={setOpen}>
           <SheetTrigger asChild>
-            <button className="p-2  rounded-lg hover:bg-gray-100 transition-colors">
+            <button className="p-2 rounded-lg hover:bg-gray-100 transition-colors">
               <Image
                 src="/assets/icons/menu.svg"
                 alt="Menu"
@@ -61,7 +61,7 @@ const MobileNavigation = ({
             </button>
           </SheetTrigger>
 
-          <SheetContent className="w-80 h-full bg-white p-0 flex flex-col">
+          <SheetContent className="w-80 h-full bg-white p-0 flex flex-col z-[10000]">
             <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
 
             {/* Header with User Info */}

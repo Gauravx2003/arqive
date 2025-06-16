@@ -14,15 +14,15 @@ const Header = ({
   accountId: string;
 }) => {
   return (
-    <header className="backdrop-blur-md bg-white/30 shadow-sm border-b rounded-xl border-white/20 mx-1 mt-1">
+    <header className="backdrop-blur-md bg-white/30 shadow-sm border-b rounded-xl border-white/20 mx-1 mt-1 relative z-30">
       <div className="flex items-center justify-between px-6 py-4">
         {/* Search Section */}
-        <div className="flex-1 max-w-2xl">
+        <div className="flex-1 max-w-2xl relative z-40">
           <Search />
         </div>
 
         {/* Right Actions */}
-        <div className="flex items-center space-x-4 ml-6">
+        <div className="flex items-center space-x-4 ml-6 relative z-30">
           {/* File Uploader */}
           <div className="hidden sm:block">
             <FileUploader ownerId={userId} accountId={accountId} />
