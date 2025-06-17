@@ -4,7 +4,6 @@ import { redirect } from "next/navigation";
 import { getFiles, getTotalSpaceUsed } from "@/lib/actions/files.action";
 import { convertFileSize, getUsageSummary } from "@/lib/utils";
 import { Models } from "node-appwrite";
-import Card from "@/components/Card";
 import Chart from "@/components/Chart";
 import Link from "next/link";
 import { MAX_SIZE } from "@/lib/utils";
@@ -65,7 +64,8 @@ const DashboardContent = async () => {
                   </span>
                 </h1>
                 <p className="text-gray-600 text-lg leading-relaxed">
-                  Here's an overview of your file storage and recent activity
+                  Here&aposs an overview of your file storage and recent
+                  activity
                 </p>
                 <div className="mt-4 flex items-center space-x-4">
                   <div className="flex items-center px-3 py-1 bg-green-100 rounded-full">
@@ -206,7 +206,7 @@ const DashboardContent = async () => {
           <div className="lg:col-span-1">
             <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl border border-white/20 p-6 lg:p-8 h-full">
               <div className="text-center mb-6">
-                <h2 className="text-2xl font-bold text-gray-900 mb-2 bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                <h2 className="text-2xl font-bold mb-2 bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
                   Storage Usage
                 </h2>
                 <p className="text-gray-600">
@@ -280,11 +280,11 @@ const DashboardContent = async () => {
             <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl border border-white/20 p-6 lg:p-8 h-full">
               <div className="flex items-center justify-between mb-6">
                 <div>
-                  <h2 className="text-2xl font-bold text-gray-900 mb-2 bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
+                  <h2 className="text-2xl font-bold mb-2 bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
                     Recent Activity
                   </h2>
                   <p className="text-gray-600">
-                    Files you've recently interacted with
+                    Files you&aposve recently interacted with
                   </p>
                 </div>
                 <div className="hidden sm:block">
@@ -397,7 +397,7 @@ const DashboardContent = async () => {
         {/* Enhanced Quick Actions */}
         <div className="mt-8">
           <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl border border-white/20 p-6 lg:p-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6 bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+            <h2 className="text-2xl font-bold  mb-6 bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
               Quick Actions
             </h2>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
