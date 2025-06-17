@@ -379,6 +379,7 @@
   .z-dropdown {
     @apply z-[9999];
   }
+<<<<<<< HEAD
 
   .z-modal {
     @apply z-[10000];
@@ -396,6 +397,25 @@
     @apply z-[10];
   }
 
+=======
+  
+  .z-modal {
+    @apply z-[10000];
+  }
+  
+  .z-overlay {
+    @apply z-[9998];
+  }
+  
+  .z-header {
+    @apply z-[30];
+  }
+  
+  .z-sidebar {
+    @apply z-[10];
+  }
+  
+>>>>>>> 4153e50b030fe674dc98138c0fe588ea36610b0c
   .z-content {
     @apply z-[0];
   }

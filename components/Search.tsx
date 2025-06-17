@@ -106,7 +106,11 @@ const Search = () => {
             value={query}
             placeholder="Search files, documents, images..."
             className={cn(
+<<<<<<< HEAD
               "pl-10 pr-10 h-11 bg-white border-gray-200 rounded-3xl",
+=======
+              "pl-10 pr-10 h-11 bg-white border-gray-200 rounded-lg",
+>>>>>>> 4153e50b030fe674dc98138c0fe588ea36610b0c
               "focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200",
               "placeholder:text-gray-400 text-sm font-medium",
               open && results.length > 0 && "rounded-b-none border-b-0"
@@ -152,7 +156,11 @@ const Search = () => {
       {/* Search Results Dropdown - Using Portal for proper z-index */}
       {open && (
         <Portal>
+<<<<<<< HEAD
           <div
+=======
+          <div 
+>>>>>>> 4153e50b030fe674dc98138c0fe588ea36610b0c
             className="fixed inset-0 z-[9999] pointer-events-none"
             style={{
               top: 0,
@@ -161,6 +169,7 @@ const Search = () => {
               bottom: 0,
             }}
           >
+<<<<<<< HEAD
             <div className="relative w-full h-full remove-scrolllbar">
               {/* Position the dropdown relative to the search input */}
               <div
@@ -173,6 +182,20 @@ const Search = () => {
                   maxWidth: "32rem", // max-w-2xl equivalent
                   paddingLeft: "1rem",
                   paddingRight: "1rem",
+=======
+            <div className="relative w-full h-full">
+              {/* Position the dropdown relative to the search input */}
+              <div 
+                className="absolute pointer-events-auto"
+                style={{
+                  top: '80px', // Adjust based on your header height
+                  left: '50%',
+                  transform: 'translateX(-50%)',
+                  width: '100%',
+                  maxWidth: '32rem', // max-w-2xl equivalent
+                  paddingLeft: '1rem',
+                  paddingRight: '1rem',
+>>>>>>> 4153e50b030fe674dc98138c0fe588ea36610b0c
                 }}
               >
                 <div className="bg-white border border-gray-200 border-t-0 rounded-b-lg shadow-2xl max-h-80 overflow-y-auto">
@@ -180,6 +203,7 @@ const Search = () => {
                     <div className="py-2">
                       <div className="px-4 py-2 border-b border-gray-100">
                         <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
+<<<<<<< HEAD
                           {results.length}{" "}
                           {results.length === 1 ? "result" : "results"} found{" "}
                           <span className="mt-2 inline-flex px-1 py-0.5 text-xs font-normal normal-case  text-blue-700">
@@ -204,6 +228,10 @@ const Search = () => {
                               it will SOON!!
                             </span>
                           </span>
+=======
+                          {results.length} {results.length === 1 ? "result" : "results"}{" "}
+                          found
+>>>>>>> 4153e50b030fe674dc98138c0fe588ea36610b0c
                         </p>
                       </div>
 
@@ -213,8 +241,12 @@ const Search = () => {
                           className={cn(
                             "flex items-center justify-between px-4 py-3 cursor-pointer transition-all duration-150",
                             "hover:bg-gray-50 hover:border-l-4 hover:border-blue-500",
+<<<<<<< HEAD
                             index !== results.length - 1 &&
                               "border-b border-gray-50"
+=======
+                            index !== results.length - 1 && "border-b border-gray-50"
+>>>>>>> 4153e50b030fe674dc98138c0fe588ea36610b0c
                           )}
                           onClick={() => {
                             console.log("File Clicked ", file);
@@ -236,8 +268,13 @@ const Search = () => {
                                 {file.name}
                               </p>
                               <p className="text-xs text-gray-500 capitalize">
+<<<<<<< HEAD
                                 {file.type} •{" "}
                                 {(file.size / (1024 * 1024)).toFixed(2)} MB
+=======
+                                {file.type} • {(file.size / (1024 * 1024)).toFixed(2)}{" "}
+                                MB
+>>>>>>> 4153e50b030fe674dc98138c0fe588ea36610b0c
                               </p>
                             </div>
                           </div>

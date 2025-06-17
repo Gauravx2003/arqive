@@ -43,9 +43,13 @@ const layout = async ({ children }: { children: React.ReactNode }) => {
 
         {/* Page Content */}
         <div className="flex-1 overflow-auto bg-white lg:m-2 rounded-xl shadow-sm border border-gray-200 relative z-0">
+<<<<<<< HEAD
           <div className="h-full sm:p-6 lg:p-8">
             <UserProvider value={currentUser}>{children}</UserProvider>
           </div>
+=======
+          <div className="h-full sm:p-6 lg:p-8">{children}</div>
+>>>>>>> 4153e50b030fe674dc98138c0fe588ea36610b0c
         </div>
       </section>
     </main>

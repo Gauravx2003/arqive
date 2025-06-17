@@ -96,8 +96,12 @@ const FileUploader = ({
               "bg-gradient-to-r from-blue-500 to-indigo-600 text-white border-0",
               "hover:from-blue-600 hover:to-indigo-700 hover:shadow-lg hover:scale-105",
               "focus:ring-2 focus:ring-blue-500 focus:ring-offset-2",
+<<<<<<< HEAD
               isDragActive &&
                 "from-green-500 to-emerald-600 shadow-lg scale-105"
+=======
+              isDragActive && "from-green-500 to-emerald-600 shadow-lg scale-105"
+>>>>>>> 4153e50b030fe674dc98138c0fe588ea36610b0c
             )}
           >
             <Image
@@ -123,8 +127,12 @@ const FileUploader = ({
                 <div className="flex items-center space-x-2 mb-3 pb-2 border-b border-gray-100">
                   <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
                   <h4 className="text-sm font-semibold text-gray-900">
+<<<<<<< HEAD
                     Uploading {files.length}{" "}
                     {files.length === 1 ? "file" : "files"}
+=======
+                    Uploading {files.length} {files.length === 1 ? "file" : "files"}
+>>>>>>> 4153e50b030fe674dc98138c0fe588ea36610b0c
                   </h4>
                 </div>
 
