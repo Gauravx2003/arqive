@@ -108,7 +108,10 @@ const ActionDropdown = ({ file }: { file: Models.Document }) => {
 
     success = await actions[action.value as keyof typeof actions]();
 
-    if (success) closeAllModals();
+    if (success) {
+      // ✅ Immediately update UI
+      closeAllModals();
+    }
 
     setIsLoading(false);
   };
@@ -153,7 +156,7 @@ const ActionDropdown = ({ file }: { file: Models.Document }) => {
     const { value, label } = action;
 
     return (
-      <DialogContent className="shad-dialog button max-w-md">
+      <DialogContent className="shad-dialog button max-w-md z-[10000]">
         <DialogHeader className="flex flex-col gap-4">
           <DialogTitle className="text-center text-xl font-semibold">
             {label}
@@ -161,6 +164,28 @@ const ActionDropdown = ({ file }: { file: Models.Document }) => {
 
           {value === "rename" && (
             <div className="space-y-4">
+              <span className="mt-2 inline-flex px-1 py-0.5 text-xs font-normal normal-case  text-blue-700">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  className="lucide lucide-circle-alert h-4 w-4"
+                >
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" x2="12" y1="8" y2="12"></line>
+                  <line x1="12" x2="12.01" y1="16" y2="16"></line>
+                </svg>
+                <span className="ml-1">
+                  Page reload is needed to see changes ( Will be optimized
+                  SOON!!)
+                </span>
+              </span>
               <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-lg">
                 <span className="text-2xl">{getFileIcon(file.name)}</span>
                 <div className="flex-1">
@@ -206,6 +231,28 @@ const ActionDropdown = ({ file }: { file: Models.Document }) => {
 
           {value === "delete" && (
             <div className="space-y-4">
+              <span className="mt-2 inline-flex px-1 py-0.5 text-xs font-normal normal-case  text-blue-700">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  className="lucide lucide-circle-alert h-4 w-4"
+                >
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" x2="12" y1="8" y2="12"></line>
+                  <line x1="12" x2="12.01" y1="16" y2="16"></line>
+                </svg>
+                <span className="ml-1">
+                  Page reload is needed to see changes ( Will be optimized
+                  SOON!!)
+                </span>
+              </span>
               <div className="flex items-center justify-center">
                 <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center">
                   <span className="text-3xl">🗑️</span>
@@ -284,7 +331,7 @@ const ActionDropdown = ({ file }: { file: Models.Document }) => {
   return (
     <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
       <DropdownMenu open={isDropDownOpen} onOpenChange={setIsDropDownOpen}>
-        <DropdownMenuTrigger className="shad-no-focus">
+        <DropdownMenuTrigger className="shad-no-focus relative z-30">
           <Image
             src="/assets/icons/dots.svg"
             alt="option"
@@ -292,7 +339,7 @@ const ActionDropdown = ({ file }: { file: Models.Document }) => {
             height={25}
           />
         </DropdownMenuTrigger>
-        <DropdownMenuContent>
+        <DropdownMenuContent className="z-[9999]">
           <DropdownMenuLabel className="max-w-[200px] truncate">
             {file.name}
           </DropdownMenuLabel>
