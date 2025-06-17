@@ -284,7 +284,7 @@ const DashboardContent = async () => {
                     Recent Activity
                   </h2>
                   <p className="text-gray-600">
-                    Files you&aposve recently interacted with
+                    Files you&apos;ve recently interacted with
                   </p>
                 </div>
                 <div className="hidden sm:block">

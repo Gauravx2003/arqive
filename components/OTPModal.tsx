@@ -110,7 +110,7 @@ const OTPModal = ({
               Verify Your Email
             </AlertDialogTitle>
             <AlertDialogDescription className="text-blue-100 text-sm leading-relaxed text-center">
-              We`&apos`ve sent a 6-digit code to
+              We&apos;ve sent a 6-digit code to
               <div className="font-semibold text-white mt-2 text-base">
                 {maskEmail(email)}
               </div>
@@ -184,7 +184,7 @@ const OTPModal = ({
             {/* Resend OTP */}
             <div className="text-center space-y-3 pt-2">
               <p className="text-slate-500 text-sm">
-                Didn&apost receive the code?
+                Didn&apos;t receive the code?
               </p>
               <Button
                 type="button"
