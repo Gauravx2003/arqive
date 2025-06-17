@@ -23,6 +23,15 @@ import OTPModal from "./OTPModal";
 
 type FormType = "sign-in" | "sign-up";
 
+function isErrorWithMessage(error: unknown): error is { message: string } {
+  return (
+    typeof error === "object" &&
+    error !== null &&
+    "message" in error &&
+    typeof (error as { message: unknown }).message === "string"
+  );
+}
+
 // Placeholder avatar options
 const avatarOptions = [
   "https://img.freepik.com/free-psd/3d-illustration-person-with-pink-hair_23-2149436186.jpg?ga=GA1.1.1990715703.1750079039&w=740",
@@ -90,16 +99,18 @@ const AuthForm = ({ type }: { type: FormType }) => {
       console.log("User created:", user);
 
       setAccountId(user.accountId);
-    } catch (error: any) {
-      // console.error("Auth error:", error);
-
-      // Optional: Try to parse known error messages
-      const message = error?.message || "An unknown error occurred.";
-
+    } catch (error: unknown) {
+      // Usage in your catch block:
+      let message = "An unknown error occurred.";
+      if (error instanceof Error) {
+        message = error.message;
+      } else if (isErrorWithMessage(error)) {
+        message = error.message;
+      }
       if (message.includes("User already exists.")) {
         setError("This email is already registered.");
       } else if (message.includes("User not found. Please sign up first.")) {
-        setError("This email is not registered");
+        setError("This email is not registered.");
       } else {
         setError(message);
       }

@@ -49,7 +49,7 @@ const FileUploader = ({
             setFiles((prev) => prev.filter((f) => f.name !== file.name));
             toast.success(`${file.name} uploaded successfully!`);
           }
-        } catch (error: any) {
+        } catch (error: unknown) {
           //console.error("Upload failed:", error.message || error);
           toast.error(error.message || "Upload failed.");
           setFiles((prev) => prev.filter((f) => f.name !== file.name));
