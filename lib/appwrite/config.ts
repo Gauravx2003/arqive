@@ -6,4 +6,5 @@ export const appwriteConfig = {
   filesCollection: process.env.NEXT_PUBLIC_APPWRITE_FILES!,
   bucketid: process.env.NEXT_PUBLIC_APPWRITE_BUCKET!,
   secret: process.env.NEXT_APPWRITE_SECRET!,
+  otp: process.env.NEXT_PUBLIC_APPWRITE_OTP!,
 };

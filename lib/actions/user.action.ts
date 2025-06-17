@@ -8,7 +8,7 @@ import { Stringify } from "../utils";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
-const getByEmail = async (email: string) => {
+export const getByEmail = async (email: string) => {
   const { database } = await CreateAdminClient();
 
   const result = await database.listDocuments(

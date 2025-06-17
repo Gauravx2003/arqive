@@ -8,15 +8,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { sortTypes } from "@/constants";
 
 const Sort = () => {
   const router = useRouter();
   const path = usePathname();
+  const searchParams = useSearchParams();
 
   const handleSort = (value: string) => {
-    router.push(`${path}?sort=${value}`);
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("sort", value); // Only update sort, preserve rest
+    router.push(`${path}?${params.toString()}`);
   };
 
   return (
