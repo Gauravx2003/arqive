@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Models } from "node-appwrite";
 import Link from "next/link";
 import Thumbnail from "./Thumbnail";

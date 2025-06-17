@@ -90,8 +90,19 @@ const AuthForm = ({ type }: { type: FormType }) => {
       console.log("User created:", user);
 
       setAccountId(user.accountId);
-    } catch {
-      setError("An error occurred. Please try again.");
+    } catch (error: any) {
+      // console.error("Auth error:", error);
+
+      // Optional: Try to parse known error messages
+      const message = error?.message || "An unknown error occurred.";
+
+      if (message.includes("User already exists.")) {
+        setError("This email is already registered.");
+      } else if (message.includes("User not found. Please sign up first.")) {
+        setError("This email is not registered");
+      } else {
+        setError(message);
+      }
     } finally {
       setIsLoading(false);
     }

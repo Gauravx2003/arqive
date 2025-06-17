@@ -120,14 +120,14 @@ const Search = () => {
           {query && (
             <button
               onClick={handleClearSearch}
-              className="absolute inset-y-0 right-0 pr-3 flex items-center hover:bg-gray-50 rounded-r-lg transition-colors"
+              className="absolute inset-y-0 right-0 pr-3 flex items-center rounded-r-lg transition-colors"
             >
               <Image
                 src="/assets/icons/remove.svg"
                 alt="Clear search"
                 height={16}
                 width={16}
-                className="text-gray-400 hover:text-gray-600"
+                className="text-gray-400 transition-transform duration-200 ease-in-out hover:scale-130 hover: cursor-pointer"
               />
             </button>
           )}
@@ -161,12 +161,12 @@ const Search = () => {
               bottom: 0,
             }}
           >
-            <div className="relative w-full h-full remove-scrolllbar">
+            <div className="relative w-full h-full  remove-scrolllbar">
               {/* Position the dropdown relative to the search input */}
               <div
                 className="absolute pointer-events-auto"
                 style={{
-                  top: "80px", // Adjust based on your header height
+                  top: "95px", // Adjust based on your header height
                   left: "42%",
                   transform: "translateX(-50%)",
                   width: "100%",

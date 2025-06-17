@@ -12,7 +12,7 @@ const Thumbnail = ({
 }: {
   type: string;
   url?: string;
-  imageClassName: string;
+  imageClassName?: string;
   className: string;
   extension: string;
 }) => {

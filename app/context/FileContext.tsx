@@ -1,7 +1,7 @@
 // context/FileContext.tsx
 "use client";
 
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useState } from "react";
 import { Models } from "node-appwrite";
 import { getFiles } from "@/lib/actions/files.action";
 

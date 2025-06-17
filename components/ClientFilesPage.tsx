@@ -5,8 +5,15 @@ import { useSearchParams } from "next/navigation";
 import { getFiles } from "@/lib/actions/files.action";
 import { getFileTypesParams } from "@/lib/utils";
 import Sort from "@/components/Sort";
-import Card from "@/components/Card";
+//import Card from "@/components/Card";
 import Image from "next/image";
+
+import dynamic from "next/dynamic";
+
+const Card = dynamic(() => import("@/components/Card"), {
+  loading: () => <p>Loading...</p>, // Optional fallback
+  ssr: false, // Optional: disable Server-Side Rendering if not needed
+});
 
 const getDisplayName = (type: string) => {
   if (!type) return "All Files";

@@ -52,7 +52,9 @@ export const CreateAccount = async ({
     throw new Error("Failed to send OTP");
   }
 
-  if (!existingUser) {
+  if (existingUser) {
+    throw new Error("User already exists.");
+  } else {
     const { database } = await CreateAdminClient();
 
     await database.createDocument(
@@ -180,5 +182,6 @@ export const SignIn = async ({ email }: { email: string }) => {
     return Stringify({ accountId });
   } catch (error) {
     handleError(error, "Failed to sign in user.");
+    throw error;
   }
 };
