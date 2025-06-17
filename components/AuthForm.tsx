@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import Image from "next/image";
 import Link from "next/link";
-import { SignIn } from "@/lib/actions/user.action";
+import { SignIn, signInWithPassword } from "@/lib/actions/user.action";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -20,8 +20,10 @@ import {
 import { Input } from "@/components/ui/input";
 import { CreateAccount } from "@/lib/actions/user.action";
 import OTPModal from "./OTPModal";
+import { useRouter } from "next/navigation";
 
 type FormType = "sign-in" | "sign-up";
+type SignInMethod = "otp" | "password";
 
 function isErrorWithMessage(error: unknown): error is { message: string } {
   return (
@@ -55,6 +57,12 @@ const authformSchema = (formType: FormType) => {
     email: z.string().email({
       message: "Invalid email address.",
     }),
+    password:
+      formType === "sign-up"
+        ? z.string().min(8, {
+            message: "Password must be at least 8 characters.",
+          })
+        : z.string().optional(),
     avatar:
       formType === "sign-up"
         ? z.string().min(1, {
@@ -68,6 +76,9 @@ const AuthForm = ({ type }: { type: FormType }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [accountId, setAccountId] = useState<string | null>(null);
+  const [signInMethod, setSignInMethod] = useState<SignInMethod>("password");
+  const [showPassword, setShowPassword] = useState(false);
+  const router = useRouter();
 
   const formSchema = authformSchema(type);
 
@@ -76,6 +87,7 @@ const AuthForm = ({ type }: { type: FormType }) => {
     defaultValues: {
       fullname: "",
       email: "",
+      password: "",
       avatar: "",
     },
   });
@@ -83,34 +95,52 @@ const AuthForm = ({ type }: { type: FormType }) => {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setIsLoading(true);
     setError(null);
-    console.log("Form submitted with values:", values);
-    console.log("Form type:", type);
+    
     try {
-      const user =
-        type === "sign-up"
-          ? await CreateAccount({
-              email: values.email,
-              fullname: values.fullname || "",
-              // Note: You'll need to add avatar to your CreateAccount function when ready
-              avatar: values.avatar || "",
-            })
-          : await SignIn({ email: values.email });
-
-      console.log("User created:", user);
-
-      setAccountId(user.accountId);
+      if (type === "sign-up") {
+        const user = await CreateAccount({
+          email: values.email,
+          fullname: values.fullname || "",
+          avatar: values.avatar || "",
+          password: values.password || "",
+        });
+        setAccountId(user.accountId);
+      } else {
+        // Sign-in logic
+        if (signInMethod === "password") {
+          if (!values.password) {
+            setError("Password is required for password sign-in.");
+            return;
+          }
+          
+          const result = await signInWithPassword({
+            email: values.email,
+            password: values.password,
+          });
+          
+          if (result.sessionId) {
+            router.push("/");
+          }
+        } else {
+          // OTP sign-in
+          const user = await SignIn({ email: values.email });
+          setAccountId(user.accountId);
+        }
+      }
     } catch (error: unknown) {
-      // Usage in your catch block:
       let message = "An unknown error occurred.";
       if (error instanceof Error) {
         message = error.message;
       } else if (isErrorWithMessage(error)) {
         message = error.message;
       }
+      
       if (message.includes("User already exists.")) {
         setError("This email is already registered.");
       } else if (message.includes("User not found. Please sign up first.")) {
         setError("This email is not registered.");
+      } else if (message.includes("Invalid credentials")) {
+        setError("Invalid email or password.");
       } else {
         setError(message);
       }
@@ -133,6 +163,37 @@ const AuthForm = ({ type }: { type: FormType }) => {
               : "Join Arqive to start managing your files"}
           </p>
         </div>
+
+        {/* Sign-in Method Toggle */}
+        {type === "sign-in" && (
+          <div className="bg-slate-50 rounded-xl p-4 border border-slate-200">
+            <p className="text-sm font-medium text-slate-700 mb-3">Choose sign-in method:</p>
+            <div className="flex space-x-2">
+              <button
+                type="button"
+                onClick={() => setSignInMethod("password")}
+                className={`flex-1 py-2 px-4 rounded-lg text-sm font-medium transition-all duration-200 ${
+                  signInMethod === "password"
+                    ? "bg-indigo-600 text-white shadow-md"
+                    : "bg-white text-slate-600 border border-slate-200 hover:bg-slate-50"
+                }`}
+              >
+                🔑 Password
+              </button>
+              <button
+                type="button"
+                onClick={() => setSignInMethod("otp")}
+                className={`flex-1 py-2 px-4 rounded-lg text-sm font-medium transition-all duration-200 ${
+                  signInMethod === "otp"
+                    ? "bg-indigo-600 text-white shadow-md"
+                    : "bg-white text-slate-600 border border-slate-200 hover:bg-slate-50"
+                }`}
+              >
+                📧 Email OTP
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* Form */}
         <Form {...form}>
@@ -206,6 +267,78 @@ const AuthForm = ({ type }: { type: FormType }) => {
               )}
             />
 
+            {/* Password Field */}
+            {(type === "sign-up" || (type === "sign-in" && signInMethod === "password")) && (
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-sm font-medium text-slate-700">
+                      Password
+                    </FormLabel>
+                    <FormControl>
+                      <div className="relative">
+                        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                          <svg
+                            className="h-5 w-5 text-slate-400"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                          >
+                            <path
+                              fillRule="evenodd"
+                              d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
+                              clipRule="evenodd"
+                            />
+                          </svg>
+                        </div>
+                        <Input
+                          type={showPassword ? "text" : "password"}
+                          placeholder={type === "sign-up" ? "Create a strong password" : "Enter your password"}
+                          {...field}
+                          className="pl-12 pr-12 h-12 border-slate-200 rounded-xl bg-slate-50/50 focus:bg-white focus:border-indigo-300 focus:ring-2 focus:ring-indigo-100 transition-all duration-200"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowPassword(!showPassword)}
+                          className="absolute inset-y-0 right-0 pr-4 flex items-center"
+                        >
+                          <svg
+                            className="h-5 w-5 text-slate-400 hover:text-slate-600"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            {showPassword ? (
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21"
+                              />
+                            ) : (
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                              />
+                            )}
+                          </svg>
+                        </button>
+                      </div>
+                    </FormControl>
+                    <FormMessage className="text-red-500 text-sm" />
+                    {type === "sign-up" && (
+                      <p className="text-xs text-slate-500 mt-1">
+                        Password must be at least 8 characters long
+                      </p>
+                    )}
+                  </FormItem>
+                )}
+              />
+            )}
+
             {/* Avatar Selection - Only for sign-up */}
             {type === "sign-up" && (
               <FormField
@@ -269,7 +402,10 @@ const AuthForm = ({ type }: { type: FormType }) => {
               className="w-full h-12 bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 transform hover:-translate-y-0.5 disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:transform-none"
             >
               <span className="flex items-center justify-center">
-                {type === "sign-in" ? "Sign In" : "Create Account"}
+                {type === "sign-in" 
+                  ? (signInMethod === "password" ? "Sign In with Password" : "Send OTP")
+                  : "Create Account"
+                }
                 {isLoading && (
                   <Image
                     src="/assets/icons/loader.svg"
@@ -348,8 +484,8 @@ const AuthForm = ({ type }: { type: FormType }) => {
         </Form>
       </div>
 
-      {/* OTP Modal */}
-      {accountId && (
+      {/* OTP Modal - Only show for OTP sign-in or sign-up */}
+      {accountId && (type === "sign-up" || signInMethod === "otp") && (
         <OTPModal email={form.getValues("email")} accountId={accountId} />
       )}
     </>

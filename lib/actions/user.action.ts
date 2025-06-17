@@ -40,23 +40,31 @@ export const CreateAccount = async ({
   email,
   fullname,
   avatar,
+  password,
 }: {
   email: string;
   fullname: string;
   avatar: string;
+  password: string;
 }) => {
   const existingUser = await getByEmail(email);
 
-  const accountId = await sendEmailOTP({ email });
-  if (!accountId) {
-    throw new Error("Failed to send OTP");
-  }
-
   if (existingUser) {
     throw new Error("User already exists.");
-  } else {
-    const { database } = await CreateAdminClient();
+  }
 
+  try {
+    const { account, database } = await CreateAdminClient();
+
+    // Create Appwrite account with password
+    const newAccount = await account.create(
+      ID.unique(),
+      email,
+      password,
+      fullname
+    );
+
+    // Create user document in database
     await database.createDocument(
       appwriteConfig.databaseId,
       appwriteConfig.userCollection,
@@ -65,12 +73,18 @@ export const CreateAccount = async ({
         email,
         fullname,
         avatar,
-        accountId,
+        accountId: newAccount.$id,
       }
     );
-  }
 
-  return Stringify({ accountId });
+    // Send OTP for email verification
+    const accountId = await sendEmailOTP({ email });
+    
+    return Stringify({ accountId: accountId || newAccount.$id });
+  } catch (error) {
+    handleError(error, "Failed to create account.");
+    throw error;
+  }
 };
 
 export const verifysecret = async ({
@@ -94,6 +108,38 @@ export const verifysecret = async ({
     return Stringify({ sessionId: session.$id });
   } catch (error) {
     handleError(error, "Failed to verify secret.");
+  }
+};
+
+export const signInWithPassword = async ({
+  email,
+  password,
+}: {
+  email: string;
+  password: string;
+}) => {
+  try {
+    const existingUser = await getByEmail(email);
+    if (!existingUser) {
+      throw new Error("User not found. Please sign up first.");
+    }
+
+    const { account } = await CreateAdminClient();
+    
+    // Create session with email and password
+    const session = await account.createEmailPasswordSession(email, password);
+
+    (await cookies()).set("appwrite-session", session.secret, {
+      path: "/",
+      httpOnly: true,
+      sameSite: "strict",
+      secure: true,
+    });
+
+    return Stringify({ sessionId: session.$id });
+  } catch (error) {
+    handleError(error, "Failed to sign in with password.");
+    throw error;
   }
 };
 
