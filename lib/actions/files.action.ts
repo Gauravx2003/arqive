@@ -10,6 +10,16 @@ import { revalidatePath } from "next/cache";
 import { Query } from "node-appwrite";
 import { MAX_SIZE } from "../utils";
 
+// 🔵 TYPES
+type SpaceCategory = { size: number; latestDate: string };
+type TotalSpaceUsed = {
+  document: SpaceCategory;
+  image: SpaceCategory;
+  video: SpaceCategory;
+  audio: SpaceCategory;
+  others: SpaceCategory;
+};
+
 export const uploadFiles = async ({
   file,
   ownerId,
@@ -40,10 +50,9 @@ export const uploadFiles = async ({
     };
 
     const totalSpace = await getTotalSpaceUsed();
-    const totalUsedSpace = Object.values(totalSpace).reduce(
-      (sum: number, category: any) => sum + category.size,
-      0
-    );
+    const totalUsedSpace = (
+      Object.values(totalSpace) as SpaceCategory[]
+    ).reduce((sum, category) => sum + category.size, 0);
 
     if (fileDocument.size + totalUsedSpace > MAX_SIZE)
       throw new Error("You Don't Have Enough Storage");
@@ -147,7 +156,7 @@ export const getTotalSpaceUsed = async () => {
       queries
     );
 
-    const totalSpace = {
+    const totalSpace: TotalSpaceUsed = {
       document: { size: 0, latestDate: "" },
       image: { size: 0, latestDate: "" },
       video: { size: 0, latestDate: "" },

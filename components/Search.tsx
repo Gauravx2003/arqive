@@ -47,7 +47,7 @@ const Search = () => {
     };
 
     fetchFiles();
-  }, [debounceQuery]);
+  }, [debounceQuery, path, router, searchParams]);
 
   useEffect(() => {
     setQuery(searchQuery);

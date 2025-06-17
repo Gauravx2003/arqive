@@ -19,7 +19,7 @@ const DashboardContent = async () => {
   }
 
   // Get storage usage data
-  const totalSpace = await getTotalSpaceUsed();
+  const totalSpace = (await getTotalSpaceUsed()) as TotalSpace;
   const usageSummary = getUsageSummary(totalSpace);
 
   // Get latest files (sorted by updatedAt descending)
@@ -32,7 +32,7 @@ const DashboardContent = async () => {
 
   // Calculate total used space and percentage
   const totalUsedSpace = Object.values(totalSpace).reduce(
-    (sum: number, category: any) => sum + category.size,
+    (sum, category) => sum + category.size,
     0
   );
 

@@ -117,7 +117,7 @@ export const constructDownloadUrl = (bucketFileId: string) => {
 };
 
 // DASHBOARD UTILS
-export const getUsageSummary = (totalSpace: any) => {
+export const getUsageSummary = (totalSpace: TotalSpace) => {
   return [
     {
       title: "Documents",
@@ -156,15 +156,15 @@ export const getUsageSummary = (totalSpace: any) => {
 export const getFileTypesParams = (type: string) => {
   switch (type) {
     case "documents":
-      return ["document"];
+      return ["document"] as FileType[];
     case "images":
-      return ["image"];
+      return ["image"] as FileType[];
     case "media":
-      return ["video", "audio"];
+      return ["video", "audio"] as FileType[];
     case "others":
-      return ["others"];
+      return ["others"] as FileType[];
     default:
-      return ["document"];
+      return ["document"] as FileType[];
   }
 };
 

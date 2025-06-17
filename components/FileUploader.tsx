@@ -26,7 +26,7 @@ const FileUploader = ({
   const path = usePathname();
 
   const handleRemoveFile = (
-    e: React.MouseEvent<HTMLImageElement>,
+    e: React.MouseEvent<HTMLButtonElement>,
     filename: string
   ) => {
     e.stopPropagation();
@@ -51,7 +51,11 @@ const FileUploader = ({
           }
         } catch (error: unknown) {
           //console.error("Upload failed:", error.message || error);
-          toast.error(error.message || "Upload failed.");
+          let message = "An unknown error occurred.";
+          if (error instanceof Error) {
+            message = error.message;
+          }
+          toast.error(message || "Upload failed.");
           setFiles((prev) => prev.filter((f) => f.name !== file.name));
         }
       });

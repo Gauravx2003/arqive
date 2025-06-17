@@ -8,6 +8,7 @@ import Sort from "@/components/Sort";
 import Image from "next/image";
 import dynamic from "next/dynamic";
 import FileListSkeleton from "./skeletons/FileListSkeleton";
+import { Models } from "node-appwrite";
 
 const Card = dynamic(() => import("@/components/Card"), {
   loading: () => (
@@ -51,7 +52,10 @@ const getTypeIcon = (type: string) => {
 };
 
 const ClientFilesPage = ({ type }: { type: string }) => {
-  const [files, setFiles] = useState<any>(null);
+  const [files, setFiles] = useState<{
+    documents: Models.Document[];
+    total: number;
+  } | null>(null);
   const [loading, setLoading] = useState(true);
   const searchParams = useSearchParams();
 
@@ -81,16 +85,16 @@ const ClientFilesPage = ({ type }: { type: string }) => {
             <div className="flex items-center space-x-4">
               {getTypeIcon(type)}
               <div>
-                <h1 className="text-3xl font-bold text-gray-900 bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                <h1 className="text-3xl font-bold  bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
                   {getDisplayName(type)}
                 </h1>
                 <p className="text-sm text-gray-600 mt-1 flex items-center">
-                  {files?.total > 0 ? (
+                  {files && files.total > 0 ? (
                     <>
                       <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-700 mr-2">
-                        {files.total}
+                        {files?.total}
                       </span>
-                      {files.total === 1 ? "file found" : "files found"}
+                      {files?.total === 1 ? "file found" : "files found"}
                     </>
                   ) : (
                     <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-600">
@@ -101,7 +105,7 @@ const ClientFilesPage = ({ type }: { type: string }) => {
               </div>
             </div>
 
-            {files?.total > 0 && (
+            {files && files.total > 0 && (
               <div className="flex items-center space-x-3 bg-gradient-to-r from-gray-50 to-blue-50/50 px-4 py-3 rounded-xl border border-gray-200/50 shadow-sm">
                 <span className="text-sm font-medium text-gray-700 whitespace-nowrap flex items-center">
                   <svg
@@ -120,9 +124,9 @@ const ClientFilesPage = ({ type }: { type: string }) => {
         </div>
 
         {/* Enhanced Files Grid or Empty State */}
-        {files?.total > 0 ? (
+        {files && files.total > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {files.documents.map((file: any, index: number) => (
+            {files?.documents.map((file, index) => (
               <div
                 key={file.$id}
                 className="transform transition-all duration-300 hover:scale-105 hover:z-10"
@@ -169,7 +173,7 @@ const ClientFilesPage = ({ type }: { type: string }) => {
           </div>
         )}
 
-        {files?.total > 0 && (
+        {files && files.total > 0 && (
           <div className="mt-12 flex justify-center">
             <div className="inline-flex items-center px-6 py-3 bg-white/80 backdrop-blur-sm rounded-xl border border-gray-200/50 shadow-sm">
               <span className="text-sm font-medium text-gray-600 flex items-center">

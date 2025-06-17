@@ -1,4 +1,4 @@
-declare type FileType = "document" | "image" | "video" | "audio" | "other";
+declare type FileType = "document" | "image" | "video" | "audio" | "others";
 
 declare interface ActionType {
   label: string;
@@ -72,3 +72,10 @@ declare interface ShareInputProps {
   onInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onRemove: (email: string) => void;
 }
+
+declare interface SpaceStats {
+  size: number;
+  latestDate: string;
+}
+
+declare type TotalSpace = Record<FileType, SpaceStats>;
