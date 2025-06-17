@@ -64,7 +64,7 @@ const DashboardContent = async () => {
                   </span>
                 </h1>
                 <p className="text-gray-600 text-lg leading-relaxed">
-                  Here&aposs an overview of your file storage and recent
+                  Here&apos;s an overview of your file storage and recent
                   activity
                 </p>
                 <div className="mt-4 flex items-center space-x-4">
