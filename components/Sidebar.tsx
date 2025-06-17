@@ -24,22 +24,25 @@ const Sidebar = ({
       <div className="px-6 py-8 border-b border-slate-700/50">
         <Link
           href="/"
-          className="flex items-center justify-center lg:justify-start"
+          className="flex flex-col items-center justify-center text-center"
         >
           <Image
             src="/assets/images/logo.png"
             alt="Arqive Logo"
             width={140}
             height={40}
-            className="hidden h-auto lg:block invert rounded-4xl"
+            className="hidden h-auto lg:block invert rounded-4xl mb-2"
           />
           <Image
             src="/assets/icons/logo-brand.svg"
             alt="Arqive"
             width={40}
             height={40}
-            className="lg:hidden brightness-0 invert"
+            className="lg:hidden brightness-0 invert mb-2"
           />
+          <p className="hidden lg:block text-xs text-slate-400 font-medium tracking-wide">
+            Your digital world, safely Arqived.
+          </p>
         </Link>
       </div>
 
