@@ -9,7 +9,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { usePathname } from "next/navigation";
-import { Separator } from "@radix-ui/react-separator";
+
 import { navItems } from "@/constants";
 import Link from "next/link";
 import { cn } from "@/lib/utils";

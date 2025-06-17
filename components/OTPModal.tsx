@@ -68,7 +68,7 @@ const OTPModal = ({
       await sendEmailOTP({ email });
       // Show success feedback
       setTimeout(() => setIsResending(false), 2000);
-    } catch (error) {
+    } catch {
       setError("Failed to resend OTP. Please try again.");
       setIsResending(false);
     }
@@ -110,7 +110,7 @@ const OTPModal = ({
               Verify Your Email
             </AlertDialogTitle>
             <AlertDialogDescription className="text-blue-100 text-sm leading-relaxed text-center">
-              We've sent a 6-digit code to
+              We&aposve sent a 6-digit code to
               <div className="font-semibold text-white mt-2 text-base">
                 {maskEmail(email)}
               </div>
@@ -183,7 +183,9 @@ const OTPModal = ({
 
             {/* Resend OTP */}
             <div className="text-center space-y-3 pt-2">
-              <p className="text-slate-500 text-sm">Didn't receive the code?</p>
+              <p className="text-slate-500 text-sm">
+                Didn&apost receive the code?
+              </p>
               <Button
                 type="button"
                 variant="ghost"
