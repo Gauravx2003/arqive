@@ -9,6 +9,7 @@ import { constructFileUrl, getFileType, Stringify } from "../utils";
 import { revalidatePath } from "next/cache";
 import { Query } from "node-appwrite";
 import { MAX_SIZE } from "../utils";
+import { Client, Storage } from "appwrite";
 
 // 🔵 TYPES
 type SpaceCategory = { size: number; latestDate: string };

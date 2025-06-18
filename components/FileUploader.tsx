@@ -1,17 +1,24 @@
+// FileUploader.tsx - Updated to upload directly to Appwrite (browser-side)
+
 "use client";
 
 import React, { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 import Image from "next/image";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 import { getFileType, convertFileToUrl } from "@/lib/utils";
 import Thumbnail from "@/components/Thumbnail";
-import { MAX_FILE_SIZE } from "@/constants";
-import { toast } from "sonner";
-import { uploadFiles } from "@/lib/actions/files.action";
 import { usePathname } from "next/navigation";
 import Portal from "./Portal";
+import { Client, Storage, ID } from "appwrite";
+import { appwriteConfig } from "@/lib/appwrite/config";
+
+const appwriteClient = new Client()
+  .setEndpoint(appwriteConfig.endpoint) // Replace with your endpoint
+  .setProject(appwriteConfig.projectId); // Replace with your project ID
+
+const storage = new Storage(appwriteClient);
 
 const FileUploader = ({
   ownerId,
@@ -30,7 +37,7 @@ const FileUploader = ({
     filename: string
   ) => {
     e.stopPropagation();
-    setFiles((prevFiles) => prevFiles.filter((file) => filename != file.name));
+    setFiles((prevFiles) => prevFiles.filter((file) => filename !== file.name));
   };
 
   const onDrop = useCallback(
@@ -38,24 +45,45 @@ const FileUploader = ({
       setFiles(acceptedFiles);
 
       const uploadPromises = acceptedFiles.map(async (file) => {
-        if (file.size > MAX_FILE_SIZE) {
+        if (file.size > 50 * 1024 * 1024) {
+          toast.error("File exceeds 50MB limit.");
           setFiles((prev) => prev.filter((f) => f.name !== file.name));
-          return toast.error("File must be up to 50MB");
+          return;
         }
 
         try {
-          const result = await uploadFiles({ file, ownerId, accountId, path });
-          if (result) {
-            setFiles((prev) => prev.filter((f) => f.name !== file.name));
-            toast.success(`${file.name} uploaded successfully!`);
-          }
+          const appwriteFile = await storage.createFile(
+            appwriteConfig.bucketid, // Replace with your bucket ID
+            ID.unique(),
+            file // Use File directly
+          );
+
+          // Send metadata to server
+          await fetch("/api/store-metadata", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              name: appwriteFile.name,
+              size: appwriteFile.sizeOriginal,
+              extension: file.name.split(".").pop(),
+              type: getFileType(file.name).type,
+              url: `${appwriteConfig.endpoint}/storage/buckets/${appwriteFile.bucketId}/files/${appwriteFile.$id}/view?project=${appwriteConfig.projectId}`,
+              accountId,
+              ownerId,
+              bucketFileId: appwriteFile.$id,
+              path,
+            }),
+          });
+
+          toast.success(`${file.name} uploaded successfully!`);
+          setFiles((prev) => prev.filter((f) => f.name !== file.name));
         } catch (error: unknown) {
-          let message = "An unknown error occurred.";
-          if (error instanceof Error) {
-            message = error.message;
-          }
-          console.log("Upload failed:", message);
-          toast.error(message || "Upload failed.");
+          console.error("Upload failed:", error);
+          toast.error(
+            "Upload failed. Try a smaller file or check your connection."
+          );
           setFiles((prev) => prev.filter((f) => f.name !== file.name));
         }
       });
@@ -82,27 +110,19 @@ const FileUploader = ({
 
   return (
     <>
-      <div className={cn("relative", className)}>
+      {/* Upload Button */}
+      <div className={className}>
         <div
           {...getRootProps()}
-          className={cn(
-            "cursor-pointer transition-all duration-200 rounded-lg",
-            isDragActive && "scale-105"
-          )}
+          className={`cursor-pointer transition-all duration-200 rounded-lg ${
+            isDragActive ? "scale-105" : ""
+          }`}
         >
           <input {...getInputProps()} />
           <Button
             type="button"
             variant="outline"
-            size="sm"
-            className={cn(
-              "flex items-center space-x-2 px-4 py-2 h-10 font-medium transition-all duration-200",
-              "bg-gradient-to-r from-blue-500 to-indigo-600 text-white border-0",
-              "hover:from-blue-600 hover:to-indigo-700 hover:shadow-lg hover:scale-105",
-              "focus:ring-2 focus:ring-blue-500 focus:ring-offset-2",
-              isDragActive &&
-                "from-green-500 to-emerald-600 shadow-lg scale-105"
-            )}
+            className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white border-0 hover:shadow-lg"
           >
             <Image
               src="/assets/icons/upload.svg"
@@ -111,14 +131,14 @@ const FileUploader = ({
               height={18}
               className="brightness-0 invert"
             />
-            <span className="hidden sm:inline">
+            <span className="ml-2">
               {isDragActive ? "Drop files here" : "Upload"}
             </span>
           </Button>
         </div>
       </div>
 
-      {/* Upload Preview - Using Portal for proper z-index */}
+      {/* Upload Preview */}
       {files.length > 0 && (
         <Portal>
           <div className="fixed inset-0 z-[9999] pointer-events-none">
@@ -140,18 +160,15 @@ const FileUploader = ({
                     return (
                       <div
                         key={`${file.name}+${index}`}
-                        className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-100 hover:border-gray-200 transition-colors"
+                        className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-100 hover:border-gray-200"
                       >
                         <div className="flex items-center space-x-3 flex-1 min-w-0">
-                          <div className="flex-shrink-0">
-                            <Thumbnail
-                              type={type}
-                              extension={extension}
-                              url={convertFileToUrl(file)}
-                              className="w-10 h-10"
-                            />
-                          </div>
-
+                          <Thumbnail
+                            type={type}
+                            extension={extension}
+                            url={convertFileToUrl(file)}
+                            className="w-10 h-10"
+                          />
                           <div className="flex-1 min-w-0">
                             <p className="text-sm font-medium text-gray-900 truncate">
                               {file.name}
@@ -160,28 +177,24 @@ const FileUploader = ({
                               {fileSizeMB} MB • {type}
                             </p>
                           </div>
-
-                          <div className="flex-shrink-0">
-                            <Image
-                              src="/assets/icons/file-loader.gif"
-                              width={24}
-                              height={24}
-                              alt="Uploading"
-                              className="opacity-70"
-                            />
-                          </div>
+                          <Image
+                            src="/assets/icons/file-loader.gif"
+                            width={24}
+                            height={24}
+                            alt="Uploading"
+                            className="opacity-70"
+                          />
                         </div>
-
                         <button
                           onClick={(e) => handleRemoveFile(e, file.name)}
-                          className="flex-shrink-0 ml-3 p-1 rounded-full hover:bg-red-100 transition-colors group"
+                          className="ml-3 p-1 rounded-full hover:bg-red-100"
                         >
                           <Image
                             src="/assets/icons/remove.svg"
                             alt="Remove file"
                             width={16}
                             height={16}
-                            className="opacity-60 group-hover:opacity-100"
+                            className="opacity-60 hover:opacity-100"
                           />
                         </button>
                       </div>
