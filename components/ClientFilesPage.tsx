@@ -107,7 +107,7 @@ const ClientFilesPage = ({ type }: { type: string }) => {
 
             {files && files.total > 0 && (
               <div className="flex items-center space-x-3 bg-gradient-to-r from-gray-50 to-blue-50/50 px-4 py-3 rounded-xl border border-gray-200/50 shadow-sm">
-                <span className="text-sm font-medium text-gray-700 whitespace-nowrap flex items-center">
+                <span className="text-sm font-medium text-gray-900 whitespace-nowrap flex items-center">
                   <svg
                     className="w-4 h-4 mr-2 text-gray-500"
                     fill="currentColor"

@@ -285,17 +285,31 @@ export const updateFileUsers = async ({
   const { database } = await CreateAdminClient();
 
   try {
+    // Step 1: Fetch the existing users array from the document
+    const existingDoc = await database.getDocument(
+      appwriteConfig.databaseId,
+      appwriteConfig.filesCollection,
+      fileId
+    );
+
+    const existingUsers: string[] = existingDoc.users || [];
+
+    // Step 2: Append new emails and remove duplicates
+    const updatedUsers = Array.from(new Set([...existingUsers, ...emails]));
+
+    // Step 3: Update the document with the new array
     const updatedFile = await database.updateDocument(
       appwriteConfig.databaseId,
       appwriteConfig.filesCollection,
       fileId,
-      { users: emails }
+      { users: updatedUsers }
     );
 
+    // Step 4: Revalidate path
     revalidatePath(path);
 
     return Stringify(updatedFile);
   } catch (error) {
-    handleError(error, "Cant Share");
+    handleError(error, "Can't Share");
   }
 };
