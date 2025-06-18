@@ -73,7 +73,8 @@ export const uploadFiles = async ({
     revalidatePath(path);
     return Stringify(newFile);
   } catch (error) {
-    handleError(error, "Something went Wrong");
+    console.error("Appwrite Upload Error:", error); // 🔍 This will show response status/message
+    handleError(error, "Something went wrong during upload");
     throw error;
   }
 };

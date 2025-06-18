@@ -55,7 +55,11 @@ const FileUploader = ({
             message = error.message;
           }
           console.log("Upload failed:", message);
-          toast.error(message || "Upload failed.");
+          toast.error(
+            error instanceof Error
+              ? error.message
+              : "Upload failed unexpectedly."
+          );
           setFiles((prev) => prev.filter((f) => f.name !== file.name));
         }
       });
