@@ -25,14 +25,14 @@ import { useRouter } from "next/navigation";
 type FormType = "sign-in" | "sign-up";
 type SignInMethod = "otp" | "password";
 
-// function isErrorWithMessage(error: unknown): error is { message: string } {
-//   return (
-//     typeof error === "object" &&
-//     error !== null &&
-//     "message" in error &&
-//     typeof (error as { message: unknown }).message === "string"
-//   );
-// }
+function isErrorWithMessage(error: unknown): error is { message: string } {
+  return (
+    typeof error === "object" &&
+    error !== null &&
+    "message" in error &&
+    typeof (error as { message: unknown }).message === "string"
+  );
+}
 
 // Placeholder avatar options
 const avatarOptions = [
@@ -95,50 +95,54 @@ const AuthForm = ({ type }: { type: FormType }) => {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setIsLoading(true);
     setError(null);
-
-    if (type === "sign-up") {
-      const res = await CreateAccount({
-        email: values.email,
-        fullname: values.fullname || "",
-        avatar: values.avatar || "",
-        password: values.password || "",
-      });
-
-      if ("error" in res) {
-        setError(res.error);
-      } else if ("accountId" in res) {
-        setAccountId(res.accountId);
-      }
-    } else {
-      if (signInMethod === "password") {
-        if (!values.password) {
-          setError("Password is required for password sign-in.");
-          setIsLoading(false);
-          return;
-        }
-
-        const res = await signInWithPassword({
+    try {
+      if (type === "sign-up") {
+        const user = await CreateAccount({
           email: values.email,
-          password: values.password,
+          fullname: values.fullname || "",
+          avatar: values.avatar || "",
+          password: values.password || "",
         });
-
-        if ("error" in res) {
-          setError(res.error ?? "Something went Wrong");
-        } else if ("sessionId" in res) {
-          router.push("/");
-        }
+        setAccountId(user.accountId);
       } else {
-        const res = await SignIn({ email: values.email });
-
-        if ("error" in res) {
-          setError(res.error);
-        } else if ("accountId" in res) {
-          setAccountId(res.accountId);
+        // Sign-in logic
+        if (signInMethod === "password") {
+          if (!values.password) {
+            setError("Password is required for password sign-in.");
+            return;
+          }
+          const result = await signInWithPassword({
+            email: values.email,
+            password: values.password,
+          });
+          if (result.sessionId) {
+            router.push("/");
+          }
+        } else {
+          // OTP sign-in
+          const user = await SignIn({ email: values.email });
+          setAccountId(user.accountId);
         }
       }
+    } catch (error: unknown) {
+      let message = "An unknown error occurred.";
+      if (error instanceof Error) {
+        message = error.message;
+      } else if (isErrorWithMessage(error)) {
+        message = error.message;
+      }
+      if (message.includes("User already exists.")) {
+        setError("This email is already registered.");
+      } else if (message.includes("User not found. Please sign up first.")) {
+        setError("This email is not registered.");
+      } else if (message.includes("Invalid credentials")) {
+        setError("Invalid email or password.");
+      } else {
+        setError(message);
+      }
+    } finally {
+      setIsLoading(false);
     }
-
-    setIsLoading(false);
   };
 
   return (

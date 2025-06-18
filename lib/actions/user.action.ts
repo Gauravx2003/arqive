@@ -125,10 +125,11 @@ export const signInWithPassword = async ({
   try {
     const existingUser = await getByEmail(email);
     if (!existingUser) {
-      return { error: "User not found. Please sign up first." };
+      throw new Error("User not found. Please sign up first.");
     }
 
     const { account } = await CreateAdminClient();
+    // Create session with email and password
     const session = await account.createEmailPasswordSession(email, password);
 
     (await cookies()).set("appwrite-session", session.secret, {
@@ -138,12 +139,10 @@ export const signInWithPassword = async ({
       secure: true,
     });
 
-    return { sessionId: session.$id };
+    return Stringify({ sessionId: session.$id });
   } catch (error) {
-    console.error("Sign in error:", error);
-    return {
-      error: "Failed to sign in. Please check your credentials.",
-    };
+    handleError(error, "Failed to sign in with password.");
+    throw error;
   }
 };
 
