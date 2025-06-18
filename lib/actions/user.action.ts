@@ -21,8 +21,13 @@ export const getByEmail = async (email: string) => {
 };
 
 export const handleError = async (error: unknown, message: string) => {
-  console.log(error, message);
-  throw error;
+  //console.log(error, message);
+  // Throw a clean new error with context, but log the real cause
+  if (error instanceof Error) {
+    throw new Error(`${message}: ${error.message}`);
+  }
+
+  throw new Error(message);
 };
 
 export const sendEmailOTP = async ({ email }: { email: string }) => {
