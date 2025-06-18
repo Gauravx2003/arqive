@@ -2,7 +2,7 @@
 
 A modern, secure file storage and management platform built with Next.js 15, TypeScript, and Appwrite. Arqive provides enterprise-grade security for storing, organizing, and accessing your files from anywhere.
 
-![Arqive Dashboard](public/readme/hero.png)
+![Arqive Dashboard](public/assets/images/logo.png)
 
 ## ✨ Features
 
