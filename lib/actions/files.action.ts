@@ -31,25 +31,11 @@ export const uploadFiles = async ({
   try {
     const inputFile = InputFile.fromBuffer(file, file.name);
 
-    let bucketFile;
-    try {
-      bucketFile = await storage.createFile(
-        appwriteConfig.bucketid,
-        ID.unique(),
-        inputFile
-      );
-    } catch (e: unknown) {
-      throw new Error(extractErrorMessage(e));
-    }
-
-    function extractErrorMessage(e: unknown): string {
-      if (e instanceof Error) return e.message;
-      if (typeof e === "object" && e !== null && "message" in e) {
-        const maybe = e as { message?: unknown };
-        if (typeof maybe.message === "string") return maybe.message;
-      }
-      return "Unexpected error occurred.";
-    }
+    const bucketFile = await storage.createFile(
+      appwriteConfig.bucketid,
+      ID.unique(),
+      inputFile
+    );
 
     const fileDocument = {
       type: getFileType(bucketFile.name).type,
