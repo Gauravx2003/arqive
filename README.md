@@ -1,36 +1,248 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Arqive - Secure File Storage Platform
 
-## Getting Started
+A modern, secure file storage and management platform built with Next.js 15, TypeScript, and Appwrite. Arqive provides enterprise-grade security for storing, organizing, and accessing your files from anywhere.
 
-First, run the development server:
+![Arqive Dashboard](public/assets/images/logo.png)
 
+## ✨ Features
+
+### 🔐 **Authentication & Security**
+- **Dual Authentication Methods**: Email/Password and OTP-based authentication
+- **Secure Sessions**: HTTP-only cookies with secure session management
+- **Email Verification**: OTP verification for enhanced security
+- **User Management**: Complete user registration and profile management
+
+### 📁 **File Management**
+- **Multi-format Support**: Documents, Images, Videos, Audio files, and more
+- **Drag & Drop Upload**: Intuitive file uploading with progress tracking
+- **File Operations**: Rename, delete, share, and download files
+- **File Preview**: Built-in thumbnail generation and file previews
+- **Storage Limits**: 20GB storage per user with usage tracking
+
+### 🎨 **Modern UI/UX**
+- **Responsive Design**: Optimized for desktop, tablet, and mobile devices
+- **Dark/Light Mode**: Theme switching support
+- **Smooth Animations**: Micro-interactions and loading states
+- **Apple-level Design**: Premium, polished interface
+- **Real-time Updates**: Live file operations and status updates
+
+### 📊 **Dashboard & Analytics**
+- **Storage Analytics**: Visual charts showing storage usage by file type
+- **Recent Activity**: Track recently uploaded and modified files
+- **Quick Actions**: Fast access to common operations
+- **File Categories**: Organized view by Documents, Images, Media, and Others
+
+### 🔍 **Search & Organization**
+- **Global Search**: Search across all files with real-time results
+- **Smart Filtering**: Filter by file type, date, size, and name
+- **Sorting Options**: Multiple sorting criteria for better organization
+- **File Sharing**: Share files with other users via email
+
+## 🚀 Tech Stack
+
+### **Frontend**
+- **Next.js 15** - React framework with App Router
+- **TypeScript** - Type-safe development
+- **Tailwind CSS** - Utility-first CSS framework
+- **Radix UI** - Accessible component primitives
+- **React Hook Form** - Form management with validation
+- **Sonner** - Toast notifications
+- **Lucide React** - Beautiful icons
+
+### **Backend & Database**
+- **Appwrite** - Backend-as-a-Service platform
+- **Node Appwrite SDK** - Server-side Appwrite integration
+- **File Storage** - Secure cloud file storage
+- **Real-time Database** - Document-based database
+
+### **Development Tools**
+- **ESLint** - Code linting and formatting
+- **PostCSS** - CSS processing
+- **Turbopack** - Fast development builds
+
+## 📦 Installation
+
+### Prerequisites
+- Node.js 18+ 
+- npm or yarn
+- Appwrite account and project
+
+### 1. Clone the Repository
+```bash
+git clone https://github.com/yourusername/arqive.git
+cd arqive
+```
+
+### 2. Install Dependencies
+```bash
+npm install
+# or
+yarn install
+```
+
+### 3. Environment Setup
+Create a `.env.local` file in the root directory:
+
+```env
+# Appwrite Configuration
+NEXT_PUBLIC_APPWRITE_ENDPOINT=https://cloud.appwrite.io/v1
+NEXT_PUBLIC_APPWRITE_PROJECT_ID=your_project_id
+NEXT_PUBLIC_APPWRITE_DATABASE=your_database_id
+NEXT_PUBLIC_APPWRITE_USERS=your_users_collection_id
+NEXT_PUBLIC_APPWRITE_FILES=your_files_collection_id
+NEXT_PUBLIC_APPWRITE_BUCKET=your_bucket_id
+NEXT_APPWRITE_SECRET=your_api_secret_key
+NEXT_PUBLIC_APPWRITE_OTP=your_otp_collection_id
+```
+
+### 4. Appwrite Setup
+
+#### Create Collections:
+1. **Users Collection** (`users`)
+   - `accountId` (string, required)
+   - `email` (string, required, unique)
+   - `fullname` (string, required)
+   - `avatar` (string, required)
+
+2. **Files Collection** (`files`)
+   - `type` (string, required)
+   - `name` (string, required)
+   - `url` (string, required)
+   - `extension` (string, required)
+   - `size` (integer, required)
+   - `owner` (string, required)
+   - `accountId` (string, required)
+   - `users` (array, required)
+   - `bucketFileId` (string, required)
+
+#### Create Storage Bucket:
+- Create a storage bucket for file uploads
+- Configure appropriate permissions
+
+### 5. Run the Development Server
 ```bash
 npm run dev
 # or
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to view the application.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🏗️ Project Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+arqive/
+├── app/                          # Next.js App Router
+│   ├── (auth)/                   # Authentication pages
+│   │   ├── sign-in/             # Sign in page
+│   │   ├── sign-up/             # Sign up page
+│   │   └── layout.tsx           # Auth layout
+│   ├── (root)/                   # Main application
+│   │   ├── [type]/              # Dynamic file type pages
+│   │   ├── layout.tsx           # Main layout
+│   │   └── page.tsx             # Dashboard
+│   ├── context/                  # React contexts
+│   ├── globals.css              # Global styles
+│   └── layout.tsx               # Root layout
+├── components/                   # Reusable components
+│   ├── ui/                      # UI components (Radix UI)
+│   ├── skeletons/               # Loading skeletons
+│   ├── ActionDropdown.tsx       # File actions menu
+│   ├── AuthForm.tsx             # Authentication form
+│   ├── Card.tsx                 # File card component
+│   ├── Chart.tsx                # Storage usage chart
+│   ├── FileUploader.tsx         # File upload component
+│   ├── Header.tsx               # Application header
+│   ├── Search.tsx               # Global search
+│   ├── Sidebar.tsx              # Navigation sidebar
+│   └── ...
+├── lib/                         # Utility libraries
+│   ├── actions/                 # Server actions
+│   ├── appwrite/               # Appwrite configuration
+│   └── utils.ts                # Utility functions
+├── public/                      # Static assets
+│   └── assets/                 # Icons and images
+├── types/                       # TypeScript type definitions
+└── ...config files
+```
 
-## Learn More
+## 🎯 Key Features Explained
 
-To learn more about Next.js, take a look at the following resources:
+### Authentication System
+- **Dual Methods**: Users can sign in with email/password or receive an OTP via email
+- **Secure Sessions**: Uses HTTP-only cookies for session management
+- **Email Verification**: OTP verification ensures email ownership
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### File Management
+- **Upload**: Drag-and-drop interface with progress tracking
+- **Organization**: Files categorized by type (Documents, Images, Media, Others)
+- **Operations**: Rename, delete, share, and download files
+- **Sharing**: Share files with other users via email addresses
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Storage Analytics
+- **Usage Tracking**: Visual representation of storage usage by category
+- **Limits**: 20GB storage limit per user with real-time tracking
+- **Health Indicators**: Storage health status based on usage percentage
 
-## Deploy on Vercel
+### Search & Discovery
+- **Global Search**: Search across all files with instant results
+- **Smart Filtering**: Filter by file type, date, size, and name
+- **Recent Activity**: Quick access to recently modified files
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 🔧 Configuration
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### File Upload Limits
+- Maximum file size: 50MB per file
+- Total storage: 20GB per user
+- Supported formats: All common file types
+
+### Security Features
+- HTTPS enforcement
+- Secure cookie settings
+- Input validation and sanitization
+- File type validation
+
+## 🚀 Deployment
+
+### Vercel (Recommended)
+1. Push your code to GitHub
+2. Connect your repository to Vercel
+3. Add environment variables in Vercel dashboard
+4. Deploy automatically
+
+### Other Platforms
+The application can be deployed on any platform that supports Next.js:
+- Netlify
+- Railway
+- DigitalOcean App Platform
+- AWS Amplify
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📝 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- [Appwrite](https://appwrite.io/) - Backend-as-a-Service platform
+- [Radix UI](https://www.radix-ui.com/) - Accessible component primitives
+- [Tailwind CSS](https://tailwindcss.com/) - Utility-first CSS framework
+- [Lucide](https://lucide.dev/) - Beautiful icon library
+
+## 📞 Support
+
+If you have any questions or need help, please:
+- Open an issue on GitHub
+- Check the [documentation](https://github.com/yourusername/arqive/wiki)
+- Contact the maintainers
+
+---
+
+**Arqive** - Your digital world, safely Arqived. 🔒
