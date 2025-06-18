@@ -2,7 +2,10 @@
 
 A modern, secure file storage and management platform built with Next.js 15, TypeScript, and Appwrite. Arqive provides enterprise-grade security for storing, organizing, and accessing your files from anywhere.
 
+🚀 **Live Demo**: [https://arqive.vercel.app](https://arqive.vercel.app)
+
 ![Arqive Dashboard](public/assets/images/logo_2.png)
+
 
 ## ✨ Features
 
@@ -166,28 +169,7 @@ arqive/
 └── ...config files
 ```
 
-## 🎯 Key Features Explained
 
-### Authentication System
-- **Dual Methods**: Users can sign in with email/password or receive an OTP via email
-- **Secure Sessions**: Uses HTTP-only cookies for session management
-- **Email Verification**: OTP verification ensures email ownership
-
-### File Management
-- **Upload**: Drag-and-drop interface with progress tracking
-- **Organization**: Files categorized by type (Documents, Images, Media, Others)
-- **Operations**: Rename, delete, share, and download files
-- **Sharing**: Share files with other users via email addresses
-
-### Storage Analytics
-- **Usage Tracking**: Visual representation of storage usage by category
-- **Limits**: 20GB storage limit per user with real-time tracking
-- **Health Indicators**: Storage health status based on usage percentage
-
-### Search & Discovery
-- **Global Search**: Search across all files with instant results
-- **Smart Filtering**: Filter by file type, date, size, and name
-- **Recent Activity**: Quick access to recently modified files
 
 ## 🔧 Configuration
 
@@ -216,33 +198,5 @@ The application can be deployed on any platform that supports Next.js:
 - Railway
 - DigitalOcean App Platform
 - AWS Amplify
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## 📝 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🙏 Acknowledgments
-
-- [Appwrite](https://appwrite.io/) - Backend-as-a-Service platform
-- [Radix UI](https://www.radix-ui.com/) - Accessible component primitives
-- [Tailwind CSS](https://tailwindcss.com/) - Utility-first CSS framework
-- [Lucide](https://lucide.dev/) - Beautiful icon library
-
-## 📞 Support
-
-If you have any questions or need help, please:
-- Open an issue on GitHub
-- Check the [documentation](https://github.com/yourusername/arqive/wiki)
-- Contact the maintainers
-
----
 
 **Arqive** - Your digital world, safely Arqived. 🔒
