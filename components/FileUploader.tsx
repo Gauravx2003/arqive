@@ -50,11 +50,11 @@ const FileUploader = ({
             toast.success(`${file.name} uploaded successfully!`);
           }
         } catch (error: unknown) {
-          //console.error("Upload failed:", error.message || error);
           let message = "An unknown error occurred.";
           if (error instanceof Error) {
             message = error.message;
           }
+          console.error("Upload failed:", message);
           toast.error(message || "Upload failed.");
           setFiles((prev) => prev.filter((f) => f.name !== file.name));
         }
