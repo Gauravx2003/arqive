@@ -54,7 +54,7 @@ const FileUploader = ({
           if (error instanceof Error) {
             message = error.message;
           }
-          console.error("Upload failed:", message);
+          console.log("Upload failed:", message);
           toast.error(message || "Upload failed.");
           setFiles((prev) => prev.filter((f) => f.name !== file.name));
         }
