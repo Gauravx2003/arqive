@@ -95,7 +95,6 @@ const AuthForm = ({ type }: { type: FormType }) => {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setIsLoading(true);
     setError(null);
-
     try {
       if (type === "sign-up") {
         const user = await CreateAccount({
@@ -112,12 +111,10 @@ const AuthForm = ({ type }: { type: FormType }) => {
             setError("Password is required for password sign-in.");
             return;
           }
-
           const result = await signInWithPassword({
             email: values.email,
             password: values.password,
           });
-
           if (result.sessionId) {
             router.push("/");
           }
@@ -134,7 +131,6 @@ const AuthForm = ({ type }: { type: FormType }) => {
       } else if (isErrorWithMessage(error)) {
         message = error.message;
       }
-
       if (message.includes("User already exists.")) {
         setError("This email is already registered.");
       } else if (message.includes("User not found. Please sign up first.")) {

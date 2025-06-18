@@ -93,7 +93,6 @@ const Search = () => {
     setQuery("");
     setResults([]);
     setOpen(false);
-
     // Remove query from URL but preserve other params
     const params = new URLSearchParams(searchParams.toString());
     params.delete("query");

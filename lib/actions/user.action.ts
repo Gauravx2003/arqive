@@ -79,7 +79,6 @@ export const CreateAccount = async ({
 
     // Send OTP for email verification
     const accountId = await sendEmailOTP({ email });
-
     return Stringify({ accountId: accountId || newAccount.$id });
   } catch (error) {
     handleError(error, "Failed to create account.");
@@ -125,7 +124,6 @@ export const signInWithPassword = async ({
     }
 
     const { account } = await CreateAdminClient();
-
     // Create session with email and password
     const session = await account.createEmailPasswordSession(email, password);
 
