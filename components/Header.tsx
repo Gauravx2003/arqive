@@ -47,7 +47,7 @@ const Header = ({
               type="submit"
               variant="outline"
               size="sm"
-              className="group flex items-center space-x-2 px-4 py-2.5 border-gray-300 hover:bg-red-50 hover:border-red-300 hover:text-red-600 transition-all duration-200 hover:shadow-md hover:scale-105"
+              className="group flex items-center space-x-2 px-4 py-4.5 border-gray-300 hover:bg-red-50 hover:border-red-300 hover:text-red-600 transition-all duration-200 hover:shadow-md hover:scale-105"
             >
               <Image
                 src="/assets/icons/logout.svg"

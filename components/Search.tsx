@@ -9,7 +9,6 @@ import { Models } from "node-appwrite";
 import Thumbnail from "./Thumbnail";
 import FormattedDate from "./FormattedDate";
 import { useRouter } from "next/navigation";
-import { useDebounce } from "use-debounce";
 import { cn } from "@/lib/utils";
 import Portal from "./Portal";
 
@@ -20,22 +19,23 @@ const Search = () => {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [query, setQuery] = useState(searchQuery);
-  const [debounceQuery] = useDebounce(query, 400);
+  const [inputValue, setInputValue] = useState(searchQuery);
   const router = useRouter();
   const path = usePathname();
 
+  // Only fetch when query changes (from URL or manual search)
   useEffect(() => {
     const fetchFiles = async () => {
-      if (debounceQuery.length === 0) {
+      if (query.length === 0) {
         setResults([]);
         setOpen(false);
         setLoading(false);
-        return router.push(path.replace(searchParams.toString(), ""));
+        return;
       }
 
       setLoading(true);
       try {
-        const files = await getFiles({ types: [], searchText: debounceQuery });
+        const files = await getFiles({ types: [], searchText: query });
         setResults(files.documents);
         setOpen(true);
       } catch (error) {
@@ -47,16 +47,37 @@ const Search = () => {
     };
 
     fetchFiles();
-  }, [debounceQuery, path, router, searchParams]);
+  }, [query]);
 
+  // Update input value when URL search query changes
   useEffect(() => {
+    setInputValue(searchQuery);
     setQuery(searchQuery);
   }, [searchQuery]);
+
+  const handleSearch = () => {
+    if (inputValue.trim() === "") {
+      handleClearSearch();
+      return;
+    }
+
+    // Update URL with search query
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("query", inputValue.trim());
+    router.push(`${path}?${params.toString()}`);
+    setQuery(inputValue.trim());
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      handleSearch();
+    }
+  };
 
   const handleClick = (file: Models.Document) => {
     setOpen(false);
     setResults([]);
-    setQuery("");
 
     router.push(
       `/${
@@ -68,10 +89,16 @@ const Search = () => {
   };
 
   const handleClearSearch = () => {
+    setInputValue("");
     setQuery("");
     setResults([]);
     setOpen(false);
-    router.push(path);
+
+    // Remove query from URL but preserve other params
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete("query");
+    const newUrl = params.toString() ? `${path}?${params.toString()}` : path;
+    router.push(newUrl);
   };
 
   return (
@@ -82,7 +109,7 @@ const Search = () => {
           {/* Animated border gradient */}
           <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 via-indigo-500/20 to-purple-500/20 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-sm"></div>
 
-          <div className="relative">
+          <div className="relative flex">
             <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
               <div className="relative">
                 <Image
@@ -99,27 +126,49 @@ const Search = () => {
             </div>
 
             <Input
-              value={query}
+              value={inputValue}
               placeholder="🔍 Search files, documents, images..."
               className={cn(
-                "pl-12 pr-12 h-12 bg-white/90 backdrop-blur-sm border-gray-200/50 rounded-3xl shadow-sm",
+                "pl-12 pr-24 h-12 bg-white/90 backdrop-blur-sm border-gray-200/50 rounded-l-3xl rounded-r-none shadow-sm",
                 "focus:border-blue-400 focus:ring-2 focus:ring-blue-400/20 focus:bg-white transition-all duration-300",
                 "placeholder:text-gray-500 text-sm font-medium",
                 "hover:shadow-md hover:border-gray-300/70",
-                open &&
-                  results.length > 0 &&
-                  "rounded-b-none border-b-0 shadow-lg"
+                open && results.length > 0 && "border-b-0 shadow-lg"
               )}
-              onChange={(e) => {
-                setQuery(e.target.value);
-              }}
+              onChange={(e) => setInputValue(e.target.value)}
+              onKeyPress={handleKeyPress}
             />
 
+            {/* Search Button */}
+            <button
+              onClick={handleSearch}
+              className="px-4 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white rounded-r-3xl transition-all duration-200 hover:shadow-lg flex items-center justify-center min-w-[60px] border border-l-0 border-blue-500"
+              disabled={loading}
+            >
+              {loading ? (
+                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+              ) : (
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                  />
+                </svg>
+              )}
+            </button>
+
             {/* Enhanced Clear Button */}
-            {query && (
+            {(inputValue || query) && (
               <button
                 onClick={handleClearSearch}
-                className="absolute inset-y-0 right-0 pr-4 flex items-center rounded-r-3xl transition-all duration-200 hover:bg-gray-50/50 group/clear"
+                className="absolute inset-y-0 right-16 pr-2 flex items-center transition-all duration-200 hover:bg-gray-50/50 group/clear"
               >
                 <div className="p-1 rounded-full hover:bg-red-100 transition-colors duration-200">
                   <Image
@@ -178,7 +227,7 @@ const Search = () => {
                           {results.length}{" "}
                           {results.length === 1 ? "result" : "results"} found
                         </p>
-                        <div className="mt-2 inline-flex items-center px-2 py-1 text-xs font-normal text-blue-700 bg-blue-50/50 rounded-full border border-blue-200/50">
+                        <div className="mt-2 inline-flex items-center px-2 py-1 text-xs font-normal text-green-700 bg-green-50/50 rounded-full border border-green-200/50">
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             width="14"
@@ -191,11 +240,10 @@ const Search = () => {
                             strokeLinejoin="round"
                             className="mr-1"
                           >
-                            <circle cx="12" cy="12" r="10"></circle>
-                            <line x1="12" x2="12" y1="8" y2="12"></line>
-                            <line x1="12" x2="12.01" y1="16" y2="16"></line>
+                            <path d="m9 12 2 2 4-4"></path>
+                            <path d="M21 12c.552 0 1.005-.449.95-.998a10 10 0 0 0-8.953-8.951c-.55-.055-.998.398-.998.95v8a1 1 0 0 0 1 1z"></path>
                           </svg>
-                          Navigation optimization coming soon!
+                          Search optimized for better navigation!
                         </div>
                       </div>
 
