@@ -31,11 +31,25 @@ export const uploadFiles = async ({
   try {
     const inputFile = InputFile.fromBuffer(file, file.name);
 
-    const bucketFile = await storage.createFile(
-      appwriteConfig.bucketid,
-      ID.unique(),
-      inputFile
-    );
+    let bucketFile;
+    try {
+      bucketFile = await storage.createFile(
+        appwriteConfig.bucketid,
+        ID.unique(),
+        inputFile
+      );
+    } catch (e: unknown) {
+      throw new Error(extractErrorMessage(e));
+    }
+
+    function extractErrorMessage(e: unknown): string {
+      if (e instanceof Error) return e.message;
+      if (typeof e === "object" && e !== null && "message" in e) {
+        const maybe = e as { message?: unknown };
+        if (typeof maybe.message === "string") return maybe.message;
+      }
+      return "Unexpected error occurred.";
+    }
 
     const fileDocument = {
       type: getFileType(bucketFile.name).type,
@@ -73,8 +87,13 @@ export const uploadFiles = async ({
     revalidatePath(path);
     return Stringify(newFile);
   } catch (error) {
-    console.error("Appwrite Upload Error:", error); // 🔍 This will show response status/message
-    handleError(error, "Something went wrong during upload");
+    console.error("❌ Upload Error Raw:", error);
+    console.error(
+      "❌ Upload Error Type:",
+      Object.prototype.toString.call(error)
+    );
+    console.error("❌ Upload Error JSON:", JSON.stringify(error, null, 2));
+    handleError(error, "Upload failed.");
     throw error;
   }
 };

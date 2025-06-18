@@ -53,14 +53,19 @@ const FileUploader = ({
           let message = "An unknown error occurred.";
           if (error instanceof Error) {
             message = error.message;
+          } else if (typeof error === "string") {
+            message = error;
+          } else if (
+            typeof error === "object" &&
+            error !== null &&
+            "message" in error &&
+            typeof (error as { message?: unknown }).message === "string"
+          ) {
+            message = (error as { message: string }).message;
           }
-          console.log("Upload failed:", message);
-          toast.error(
-            error instanceof Error
-              ? error.message
-              : "Upload failed unexpectedly."
-          );
-          setFiles((prev) => prev.filter((f) => f.name !== file.name));
+
+          console.error("📛 Upload failed client-side:", error);
+          toast.error(message);
         }
       });
 
