@@ -59,7 +59,7 @@ const FileUploader = ({
           );
 
           // Send metadata to server
-          await fetch("/api/store-metadata", {
+          const metaRes = await fetch("/api/store-metadata", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -77,8 +77,17 @@ const FileUploader = ({
             }),
           });
 
-          toast.success(`${file.name} uploaded successfully!`);
-          setFiles((prev) => prev.filter((f) => f.name !== file.name));
+          const metaData = await metaRes.json();
+
+          if (!metaRes.ok) {
+            await storage.deleteFile(appwriteConfig.bucketid, appwriteFile.$id); // cleanup again if needed
+            toast.error(
+              metaData.error || "Upload rejected. Storage quota exceeded."
+            );
+          } else {
+            toast.success(`${file.name} uploaded successfully!`);
+            setFiles((prev) => prev.filter((f) => f.name !== file.name));
+          }
         } catch (error: unknown) {
           console.error("Upload failed:", error);
           toast.error(
