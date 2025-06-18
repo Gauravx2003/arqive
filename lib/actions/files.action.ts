@@ -149,11 +149,8 @@ export const getTotalSpaceUsed = async () => {
     if (!currentUser) throw new Error("User Not Found");
 
     const queries = [
-      Query.or([
-        Query.equal("owner", [currentUser.$id]),
-        Query.contains("users", [currentUser.email]),
-      ]),
-      Query.select(["type", "size", "$updatedAt"]),
+      Query.equal("owner", [currentUser.$id]),
+      Query.select(["type", "name", "size", "$updatedAt"]),
     ];
 
     const files = await database.listDocuments(
