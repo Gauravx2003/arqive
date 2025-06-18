@@ -242,7 +242,7 @@ const Search = () => {
                             <path d="m9 12 2 2 4-4"></path>
                             <path d="M21 12c.552 0 1.005-.449.95-.998a10 10 0 0 0-8.953-8.951c-.55-.055-.998.398-.998.95v8a1 1 0 0 0 1 1z"></path>
                           </svg>
-                          Search optimized for better navigation!
+                          Searchbar will be optimized soon for better navigation😊!
                         </div>
                       </div>
 
